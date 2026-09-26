@@ -320,12 +320,27 @@ import('./ads-aside.js').then((m) => {
   document.addEventListener('click', (e) => {
     if (e.target.closest('.ads-slot-cta')) import('./quote-modal.js').then((mod) => mod.openQuoteModal());
   });
-  // Encarts repetes sur toute la colonne (Naim 23/09) ; carre maison adtv1e1 en 3e position (Naim 24/09).
-  m.createAdsAside($('#ads-aside'), { repeat: true, square: { file: 'adtv1e1.webp', at: 2 } });
-  // Colonne sous Liquid (Naim 24/09) : carre maison adtv1e2 en tete, puis les placeholders se REPETENT pour remplir
-  // l'espace restant jusqu'au bas de l'ecran (hauteur posee par fitAdsExtra). Toujours visible sur desktop : on peut
-  // scroller jusqu'aux encarts du bas sans devoir replier Veille+Liquid.
-  m.createAdsAside($('#ads-extra'), { repeat: true, square: { file: 'adtv1e2.webp', at: 0 } });
+  // Encarts repetes sur toute la colonne (Naim 23/09). 1er = CTA devis, 2e = placeholder : TOUJOURS libres (Naim 24/09,
+  // "il reste une bonne place a prendre"). Puis tuveuxun noye parmi d'autres pubs gratuites (Naim 26/09).
+  m.createAdsAside($('#ads-aside'), {
+    repeat: true,
+    square: [
+      { file: 'adtv1e1.webp', at: 2 },
+      { file: 'minimax.webp', at: 3 },
+      { file: 'higgsfield.webp', at: 4 },
+    ],
+  });
+  // Colonne sous Liquid (Naim 24/09, toujours visible desktop, strip repete) : tuveuxun parmi d'autres (26/09).
+  // Le 3e encart reste un placeholder ; Bouletcorp n'apparait qu'en interface FR (sinon placeholder).
+  m.createAdsAside($('#ads-extra'), {
+    repeat: true,
+    square: [
+      { file: 'adtv1e2.webp', at: 0 },
+      { file: 'ollama.webp', at: 1 },
+      { file: 'codeberg.webp', at: 3 },
+      { file: 'bouletcorp.webp', at: 4 },
+    ],
+  });
 });
 
 // pub-aside/ads-aside : positionnes par layoutDrawers() plus bas (colonnes bandeau -> footer). scroll-anchor.js

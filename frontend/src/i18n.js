@@ -286,6 +286,7 @@ const DICT = {
     'ago.mo': 'mo',
 
     'foot.sources': 'WHERE THE COAL COMES FROM',
+    'foot.libraries': 'Libraries & landmarks:',
     'foot.rules': 'HOUSE RULES',
     'foot.rulesBody':
       "Other people's content stays with other people: we show a link, a title and credit. We only let you download what's free (permissive license) or made in-house. Everything else: the “Source” button.",
@@ -417,7 +418,7 @@ const DICT = {
     'a11y.collapseWatch': 'Replier/deplier le rail video',
     'a11y.collapseLiquid': 'Replier/déplier Liquid Enhancement',
 
-    'hero.tag1': 'Non petit humain, arrête de dire "ça marchait sur mon ordi", tu ne charbonnes pas ossi dur ke T 1000 agents ',
+    'hero.tag1': 'Non, webdev organique. Cesse de prétendre "ça marchait sur mon ordi", tu ne charbonnes pas ossi dur ke T 1000 agents ',
     'hero.tag2': '84 % haine du vibecodeur · 13 % Terminators pacifistes infiltrés · 2 % survie',
 
     'nav.visitor': 'Visiteur n°',
@@ -597,6 +598,7 @@ const DICT = {
     'ago.mo': 'mois',
 
     'foot.sources': "D'OÙ VIENT LE CHARBON",
+    'foot.libraries': 'Bibliothèques & repères :',
     'foot.rules': 'RÈGLES DU JEU',
     'foot.rulesBody':
       "Le contenu des autres reste chez les autres : on affiche un lien, un titre et un crédit. On ne te laisse télécharger que ce qui est libre (licence permissive) ou fait maison. Le reste : bouton « Source ».",
@@ -908,6 +910,7 @@ const DICT = {
     'ago.mo': 'mes',
 
     'foot.sources': 'DE DÓNDE SALE EL CARBÓN',
+    'foot.libraries': 'Bibliotecas y referencias:',
     'foot.rules': 'REGLAS DE LA CASA',
     'foot.rulesBody':
       'El contenido ajeno se queda con sus dueños: mostramos un enlace, un título y el crédito. Solo dejamos descargar lo que es libre (licencia permisiva) o hecho en casa. Todo lo demás: el botón «Fuente».',

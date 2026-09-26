@@ -36,3 +36,29 @@ Thumbs.db
 *.webm
 *.mov
 *.mkv
+
+# Donnees des visiteurs et miroir de medias (26/09) : uploads Add Coal (peuvent contenir EXIF/GPS) et copies de
+# medias tiers — jamais dans git. watch-inbox.txt (veille manuelle de Naim) reste suivi.
+backend/data/coal/
+backend/data/mirror/
+
+# Cles, certificats, identifiants
+*.pem
+*.key
+*.p12
+*.pfx
+acme.json
+id_rsa*
+*.secret
+
+# Archives de deploiement (peuvent embarquer un .env ou une base)
+*.tgz
+*.tar.gz
+*.zip
+
+# Journaux, caches, editeurs
+logs/
+.pytest_cache/
+.vscode/
+.idea/
+*.swp

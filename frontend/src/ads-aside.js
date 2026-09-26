@@ -18,6 +18,13 @@ const esc = (s) =>
 const HOUSE_SQUARES = {
   'adtv1e1.webp': { url: 'https://tuveuxun.expert', label: 'tuveuxun.expert' },
   'adtv1e2.webp': { url: 'https://tuveuxun.expert', label: 'tuveuxun.expert' },
+  // Pubs gratuites (Naim 26/09) : outils reconnus, pour que tuveuxun soit "un parmi d'autres". Liens verifies 200 le
+  // 26/09/2026. Tant que l'image n'existe pas dans public/pubs/, l'encart reste un placeholder (rien ne casse).
+  'minimax.webp': { url: 'https://design.minimax.io/', label: 'MiniMax Design' },
+  'higgsfield.webp': { url: 'https://higgsfield.ai', label: 'Higgsfield AI' },
+  'ollama.webp': { url: 'https://ollama.com', label: 'Ollama' },
+  'codeberg.webp': { url: 'https://codeberg.org', label: 'Codeberg' },
+  'bouletcorp.webp': { url: 'https://bouletcorp.com', label: 'Bouletcorp' }, // zone_fr_only/squares (interface FR)
   ...(import.meta.env.DEV
     ? { 'avcnewssport.webp': { url: 'https://www.tiktok.com/@tabascocity/video/7172868076235443461', label: 'AVC News Sport' } }
     : {}),
@@ -104,7 +111,8 @@ export async function createAdsAside(rootEl, { repeat = false, square = null, on
         .join('');
       [...body.querySelectorAll('.ads-slot-real')].forEach((a, i) => trackPromo(a, `ad:${slotsCache[i].id}`));
     }
-    if (square) placeSquare(body, square); // carre maison, avant recopiage : les copies reprennent le jeu de base
+    // Carre(s) maison, avant recopiage : les copies reprennent le jeu de base. `square` = un objet OU une liste (26/09).
+    for (const sq of [].concat(square ?? [])) placeSquare(body, sq);
     if (repeat) fillColumn(rootEl);
   };
 
