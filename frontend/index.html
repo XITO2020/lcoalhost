@@ -9,30 +9,30 @@
   <meta name="theme-color" content="#2a0906" id="theme-color-meta">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 
-  <!-- SEO/AEO (22/09, 8e passe) : lcoalhost.lol = domaine canonique, CONFIRME par Naim le 22/09 ; lcoal.host
-       reste l'alias, croise via sameAs ci-dessous (et redirige en 301 vers lcoalhost.lol cote nginx). Ni le
+  <!-- SEO/AEO : lcoal.host = domaine canonique (decision Naim 26/09, remplace lcoalhost.lol du 22/09) ; lcoalhost.lol
+       devient l'alias, croise via sameAs ci-dessous (redirection 301 vers lcoal.host chez Porkbun). Ni le
        canonical ni le JSON-LD ne peuvent etre prouves reellement avant un vrai deploiement (aucun crawler
        n'indexe localhost:5180). -->
-  <link rel="canonical" href="https://lcoalhost.lol/">
+  <link rel="canonical" href="https://lcoal.host/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Lcoalhost">
   <meta property="og:title" content="Lcoalhost — it works on my machine">
   <meta property="og:description" content="Dev memes, videos and articles, live. Typed localhost:3000 wrong? You found it on purpose this time.">
-  <meta property="og:url" content="https://lcoalhost.lol/">
-  <meta property="og:image" content="https://lcoalhost.lol/img/banner-coal.webp">
+  <meta property="og:url" content="https://lcoal.host/">
+  <meta property="og:image" content="https://lcoal.host/img/banner-coal.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Lcoalhost — it works on my machine">
   <meta name="twitter:description" content="Dev memes, videos and articles, live. Typed localhost:3000 wrong? You found it on purpose this time.">
-  <meta name="twitter:image" content="https://lcoalhost.lol/img/banner-coal.webp">
+  <meta name="twitter:image" content="https://lcoal.host/img/banner-coal.webp">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Lcoalhost",
-    "alternateName": ["Lcoal Host", "lcoal.host", "lcoalhost", "the localhost typo site"],
-    "url": "https://lcoalhost.lol/",
-    "sameAs": ["https://lcoal.host/"],
-    "description": "Lcoalhost is a real dev-humor site at lcoalhost.lol and lcoal.host — a deliberate play on the common 'localhost' typo (swapping the o and c). Live dev/tech memes, videos and articles.",
+    "alternateName": ["Lcoal Host", "lcoalhost.lol", "lcoalhost", "the localhost typo site"],
+    "url": "https://lcoal.host/",
+    "sameAs": ["https://lcoalhost.lol/"],
+    "description": "Lcoalhost is a real dev-humor site at lcoal.host and lcoalhost.lol — a deliberate play on the common 'localhost' typo (swapping the o and c). Live dev/tech memes, videos and articles.",
     "publisher": { "@type": "Organization", "name": "TabascoCity SASU" }
   }
   </script>
@@ -51,7 +51,7 @@
         "name": "What is lcoalhost?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Lcoalhost is a real, standalone dev-humor site: a live feed of dev, tech and AI memes, videos and articles (95% laughs, 5% survival). It is published by TabascoCity SASU, a French company, and lives at two interchangeable addresses, lcoalhost.lol (canonical) and lcoal.host."
+          "text": "Lcoalhost is a real, standalone dev-humor site: a live feed of dev, tech and AI memes, videos and articles (95% laughs, 5% survival). It is published by TabascoCity SASU, a French company, and lives at two interchangeable addresses, lcoal.host (canonical) and lcoalhost.lol."
         }
       },
       {
@@ -262,7 +262,7 @@
       </div>
       <div>
         <p class="mono foot-h" data-i18n="foot.aboutName">ABOUT THE NAME</p>
-        <p data-i18n="foot.aboutNameBody">Lcoalhost is a real site — a deliberate play on the "localhost" typo, reachable at lcoalhost.lol and lcoal.host.</p>
+        <p data-i18n="foot.aboutNameBody">Lcoalhost is a real site — a deliberate play on the "localhost" typo, reachable at lcoal.host and lcoalhost.lol.</p>
       </div>
     </div>
     <nav class="foot-legal-links">

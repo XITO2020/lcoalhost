@@ -292,7 +292,7 @@ const DICT = {
       "Other people's content stays with other people: we show a link, a title and credit. We only let you download what's free (permissive license) or made in-house. Everything else: the “Source” button.",
     'foot.aboutName': 'About the name',
     'foot.aboutNameBody':
-      'Lcoalhost is a real, deliberate site — a play on the common "localhost" typo (swap the o and c). Two addresses, one project: lcoalhost.lol and lcoal.host.',
+      'Lcoalhost is a real, deliberate site — a play on the common "localhost" typo (swap the o and c). Two addresses, one project: lcoal.host and lcoalhost.lol.',
     'foot.legal': '© Lcoalhost — TabascoCity SASU · No tracking cookies: just one anonymous ID to remember your reactions and your binder.',
     'foot.awaiting': "awaiting approval: ",
     'foot.sourcesFallback': 'Hacker News · DEV · Lobsters · Lemmy · PeerTube · CERT-FR · EFF',
@@ -916,7 +916,7 @@ const DICT = {
       'El contenido ajeno se queda con sus dueños: mostramos un enlace, un título y el crédito. Solo dejamos descargar lo que es libre (licencia permisiva) o hecho en casa. Todo lo demás: el botón «Fuente».',
     'foot.aboutName': 'Sobre el nombre',
     'foot.aboutNameBody':
-      'Lcoalhost es un sitio real, hecho a propósito — un guiño a la typo clásica de "localhost" (o y c invertidas). Dos direcciones, un mismo proyecto: lcoalhost.lol y lcoal.host.',
+      'Lcoalhost es un sitio real, hecho a propósito — un guiño a la typo clásica de "localhost" (o y c invertidas). Dos direcciones, un mismo proyecto: lcoal.host y lcoalhost.lol.',
     'foot.legal': '© Lcoalhost — TabascoCity SASU · Sin cookies de rastreo: solo un ID anónimo para recordar tus reacciones y tu carpeta.',
     'foot.awaiting': 'esperando aprobación: ',
     'foot.sourcesFallback': 'Hacker News · DEV · Lobsters · Lemmy · PeerTube · CERT-FR · EFF',

@@ -10,7 +10,7 @@ import { wrap } from '../lib/wrap';
 
 export const publicRouter = Router();
 
-const SITE_URL = 'https://lcoalhost.lol';
+const SITE_URL = 'https://lcoal.host';
 
 const escHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] as string);
 const escXml = escHtml; // memes caracteres a echapper pour du XML basique (pas d'attribut avec guillemet simple ici)

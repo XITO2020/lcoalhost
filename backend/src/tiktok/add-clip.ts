@@ -40,7 +40,7 @@ async function main() {
   }
 
   const res = await fetch(`https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`, {
-    headers: { 'user-agent': 'lcoalhost-bot/0.1 (+https://lcoalhost.lol; contact: tabascocity@proton.me)' },
+    headers: { 'user-agent': 'lcoalhost-bot/0.1 (+https://lcoal.host; contact: tabascocity@proton.me)' },
     signal: AbortSignal.timeout(15000),
   });
   if (!res.ok) {

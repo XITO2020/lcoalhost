@@ -28,7 +28,7 @@ async function main() {
         sourceLabel: 'Lcoalhost',
         title: m.title,
         caption: m.caption,
-        permalink: 'https://lcoalhost.lol',
+        permalink: 'https://lcoal.host',
         author: 'la Centrale',
         topic: m.topic ?? classify(`${m.title} ${m.caption}`),
         lang: 'fr', // voix FR exclusive de Naim (decision 22/09) : jamais traduits/affiches en mode EN

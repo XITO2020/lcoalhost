@@ -72,8 +72,8 @@ echo "API :"
 curl -fs http://127.0.0.1:4300/api/health && echo ""
 echo "nginx (derriere Traefik) :"
 # Controle du VRAI site (un simple 200 pouvait etre la page par defaut de nginx).
-if curl -fs -H "Host: lcoalhost.lol" http://127.0.0.1:8086/ | grep -q 'id="centrale"'; then echo "site Lcoalhost servi : OK"; else echo "ECHEC : nginx ne sert pas le site Lcoalhost"; fi
+if curl -fs -H "Host: lcoal.host" http://127.0.0.1:8086/ | grep -q 'id="centrale"'; then echo "site Lcoalhost servi : OK"; else echo "ECHEC : nginx ne sert pas le site Lcoalhost"; fi
 REMOTE
 
 echo ""
-echo "== EN LIGNE (si le DNS pointe deja sur 187.77.144.220) : https://lcoalhost.lol =="
+echo "== EN LIGNE (si le DNS pointe deja sur 187.77.144.220) : https://lcoal.host =="

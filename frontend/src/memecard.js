@@ -42,6 +42,6 @@ export function memePng(item) {
   g.font = '700 28px "Courier New", monospace';
   g.fillStyle = '#6b6a72';
   g.textAlign = 'right';
-  g.fillText('lcoalhost.lol', S - 56, S - 66);
+  g.fillText('lcoal.host', S - 56, S - 66);
   return new Promise((resolve) => c.toBlob(resolve, 'image/png'));
 }

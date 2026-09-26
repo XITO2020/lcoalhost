@@ -95,8 +95,8 @@ const schema = z.object({
   EMAIL_SERVER_PORT: z.coerce.number().default(587), // secure deduit du port (465=SSL, sinon STARTTLS), comme conspix
   EMAIL_SERVER_USER: z.string().default(''),
   EMAIL_SERVER_PASSWORD: z.string().default(''),
-  EMAIL_FROM: z.string().default('no-reply@lcoalhost.lol'),
-  QUOTE_TO_EMAIL: z.string().default('tabascocity@proton.me'),
+  EMAIL_FROM: z.string().default('no-reply@lcoal.host'),
+  QUOTE_TO_EMAIL: z.string().default('coalthehost@proton.me'), // boite neutre Lcoalhost (discretion d'identite, 26/09)
 });
 
 const env = schema.parse(process.env);
@@ -120,5 +120,5 @@ export const config = {
   redditSubs: env.REDDIT_SUBREDDITS.split(',').map((s) => s.trim()).filter(Boolean),
   redditSearchQueries: env.REDDIT_SEARCH_QUERIES.split(',').map((s) => s.trim()).filter(Boolean),
   // Identifie honnetement le robot aupres des sources (bonne pratique + exige par plusieurs API).
-  userAgent: 'lcoalhost-bot/0.1 (+https://lcoalhost.lol; contact: tabascocity@proton.me)',
+  userAgent: 'lcoalhost-bot/0.1 (+https://lcoal.host; contact: tabascocity@proton.me)',
 };

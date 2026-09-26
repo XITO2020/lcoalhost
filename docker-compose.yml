@@ -53,7 +53,7 @@ services:
       NODE_OPTIONS: --max-old-space-size=320   # tas Node sous le plafond memoire du conteneur
       PORT: "4200"
       DATABASE_URL: postgresql://lh_user:${POSTGRES_PASSWORD:?}@db:5432/lcoalhost
-      CORS_ORIGINS: ${SITE_ORIGIN:?SITE_ORIGIN manquant dans .env (ex. https://lcoalhost.lol)}
+      CORS_ORIGINS: ${SITE_ORIGIN:?SITE_ORIGIN manquant dans .env (ex. https://lcoal.host)}
       # Mode admin : chaine longue et aleatoire (le backend REFUSE de demarrer avec un token de dev faible).
       ADMIN_TOKEN: ${ADMIN_TOKEN:?ADMIN_TOKEN manquant dans .env}
       SCRAPE_ENABLED: "true"
@@ -79,6 +79,13 @@ services:
       AGENT_MEMES_ENABLED: ${AGENT_MEMES_ENABLED:-false}
       OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b}
+      # Demande de devis pub -> SMTP Brevo (compte neutre Lcoalhost). Host vide = demande seulement stockee en base.
+      EMAIL_SERVER_HOST: ${EMAIL_SERVER_HOST:-}
+      EMAIL_SERVER_PORT: ${EMAIL_SERVER_PORT:-587}
+      EMAIL_SERVER_USER: ${EMAIL_SERVER_USER:-}
+      EMAIL_SERVER_PASSWORD: ${EMAIL_SERVER_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-anon@lcoal.host}
+      QUOTE_TO_EMAIL: ${QUOTE_TO_EMAIL:-coalthehost@proton.me}
     extra_hosts:
       - "host.docker.internal:host-gateway"   # Docker Linux ne resout pas host.docker.internal tout seul
     volumes:
@@ -114,7 +121,9 @@ services:
       - ./videos:/srv/videos:ro
     labels:
       - traefik.enable=true
-      - traefik.http.routers.lcoalhost.rule=Host(`lcoalhost.lol`) || Host(`www.lcoalhost.lol`) || Host(`lcoal.host`) || Host(`www.lcoal.host`)
+      # lcoal.host SEUL (26/09) : lcoalhost.lol ne pointe pas ici (redirige chez Porkbun) ; un domaine absent du DNS ferait
+      # echouer le certificat Let's Encrypt de TOUT le routeur.
+      - traefik.http.routers.lcoalhost.rule=Host(`lcoal.host`) || Host(`www.lcoal.host`)
       - traefik.http.routers.lcoalhost.entrypoints=websecure
       - traefik.http.routers.lcoalhost.tls.certresolver=letsencrypt
       - traefik.http.services.lcoalhost.loadbalancer.server.port=8086

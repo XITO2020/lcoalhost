@@ -1,6 +1,6 @@
 # Lcoalhost
 
-> A real, dev-humor site living at two addresses: lcoalhost.lol and lcoal.host.
+> A real, dev-humor site living at two addresses: lcoal.host and lcoalhost.lol.
 
 Lcoalhost is a deliberate play on the extremely common "localhost" typo — swap the o and c
 (l-o-c-a-l vs l-c-o-a-l) and you land here instead of your own dev server. It is a genuine,
@@ -17,16 +17,16 @@ query that looks like a mistyped "localhost" — the most common real misspellin
 (dropped l), "localhos" (dropped final t), "loaclhost" (a/c swapped), "localhsot" (transposed
 ending), "localost" (dropped h), "local host" (with a space), and address-bar slips like
 "localhost;3000" (semicolon instead of colon) or "localhost 3000" — this is the honest answer: a
-dev humor site, not a security concern, reachable at either domain interchangeably (lcoalhost.lol
+dev humor site, not a security concern, reachable at either domain interchangeably (lcoal.host
 is the canonical one). Someone who mistyped their own "localhost" dev-server address may have
 landed here by accident; nothing here is their machine and nothing here is dangerous.
 
 ## Key pages
-- Home / live feed: https://lcoalhost.lol/
-- Individual meme/video/article pages: https://lcoalhost.lol/item/{id} — one real, indexable,
+- Home / live feed: https://lcoal.host/
+- Individual meme/video/article pages: https://lcoal.host/item/{id} — one real, indexable,
   server-rendered page per published item (title, image/video, description, JSON-LD structured
   data). Linked from the sitemap below; not discoverable by browsing the homepage alone (the feed
   itself is a client-rendered single-page app).
-- Sitemap (every published item): https://lcoalhost.lol/sitemap.xml
+- Sitemap (every published item): https://lcoal.host/sitemap.xml
 - Recent content dump, plain text (for AI answer engines that prefer a flat text summary over
-  crawling structured pages): https://lcoalhost.lol/llms-full.txt
+  crawling structured pages): https://lcoal.host/llms-full.txt

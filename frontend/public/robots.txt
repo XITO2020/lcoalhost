@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lcoalhost.lol/sitemap.xml
+Sitemap: https://lcoal.host/sitemap.xml

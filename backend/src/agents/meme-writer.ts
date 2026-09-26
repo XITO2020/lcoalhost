@@ -76,7 +76,7 @@ async function saveDraft(draft: Draft, lang: 'en' | 'fr'): Promise<void> {
       sourceLabel: `Agent IA (${config.OLLAMA_MODEL})`,
       title: draft.title,
       caption: draft.caption,
-      permalink: 'https://lcoalhost.lol',
+      permalink: 'https://lcoal.host',
       author: 'agent',
       topic,
       lang,

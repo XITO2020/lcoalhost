@@ -87,7 +87,7 @@ async function createItem(req: Request, res: Response): Promise<void> {
       sourceLabel: 'Lcoalhost',
       title: body.title,
       caption: body.caption ?? null,
-      permalink: body.permalink ?? body.mediaUrl ?? body.embedUrl ?? 'https://lcoalhost.lol',
+      permalink: body.permalink ?? body.mediaUrl ?? body.embedUrl ?? 'https://lcoal.host',
       mediaUrl: body.mediaUrl ?? null,
       embedUrl: body.embedUrl ?? null,
       thumbUrl: body.thumbUrl ?? null,

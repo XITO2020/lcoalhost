@@ -103,7 +103,7 @@ export async function publishSubmission(sub: CoalSubmission): Promise<string> {
         ...common(sub),
         kind: 'MEME',
         title: sub.description.slice(0, 120),
-        permalink: 'https://lcoalhost.lol', // pas de page source externe : upload direct
+        permalink: 'https://lcoal.host', // pas de page source externe : upload direct
         license: 'Soumission visiteur (Add Coal) — droits non verifies',
         storage: 'MIRROR',
         localPath: filename,
