@@ -1,0 +1,915 @@
+/* Lcoalhost — blanc 2030 + humour 90's. Un seul accent (orange couchant). Polices systeme : rien a telecharger. */
+:root {
+  --bg: #f7ece0;
+  --paper: #ffffff;
+  --ink: #15151a;
+  --mute: #6b6a72;
+  --line: #e4e1d8;
+  --line2: #cfcabd;
+  --accent: #e8622c;
+  --accent-soft: #fde9df;
+  --coal: #1c1b20;
+  --dusk: #241a32;
+  --cream: #fff1c9;
+  --banner-h: 333px;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --head: "Technicz", "Trebuchet MS", "Segoe UI", Verdana, sans-serif;
+  --mono: "Courier New", ui-monospace, Menlo, Consolas, monospace;
+  /* Texte pose sur un bloc plein --ink (onglet actif, chip.on, hbar...) : #fff en clair, doit s'inverser en sombre. */
+  --ink-contrast: #fff;
+  --banner-fallback: #1a0705;
+  --banner-img: url(/img/banner-coal.webp);
+  --foot-img: none; /* mode blanc = aucune texture sur le pied de page */
+  --bg-img: none; /* texture plein-fond derriere la page (nuit/acier uniquement) */
+  --card-img: none; /* pose sur chaque carte, cf. --card-img-a/b/c pour l'alternance */
+  --card-img-a: none;
+  --card-img-b: none;
+  --card-img-c: none;
+  /* Bandeau ticker : creme/texte fonce par defaut, retheme par mode (nuit=negatif bleu/violet, urbex=photo). */
+  --ticker-bg: var(--cream);
+  --ticker-bg-img: none;
+  --ticker-color: #15151a;
+  --ticker-border: #15151a;
+  /* Panneaux langue/theme (Naim 22/09) : rectangle plein, police Industrial Poison. */
+  --panel-bg: #f7ece0;
+  --panel-color: #2a1c12;
+  --stage-a: #ffffff;
+  --stage-b: #f3f0e9;
+  --placeholder: #ece9e1;
+  /* Volets de dossier des asides (Naim 23/09) : couleurs TRES discretes, dans la teinte d'accent du theme. */
+  --drawer-arrow: rgba(232, 98, 44, .55);
+  /* Fond des deux asides pub (Naim 23/09) : un acier par theme. */
+  --aside-bg-img: url(/img/steel.jpg);
+  color-scheme: light;
+}
+
+/* --- Themes (Naim 22/09) : blanc = defaut, pas de detection systeme (prefers-color-scheme ignore volontairement).
+   Bascule manuelle uniquement via #theme-switch, persistee comme la langue (voir theme.js). --- */
+:root[data-theme="night"] {
+  --bg: #121016;
+  --paper: #1c1a22;
+  --ink: #f0ece2;
+  --mute: #a6a2b0;
+  --line: #322e3c;
+  --line2: #433d4d;
+  /* Retour Naim 22/09 : l'accent orange (mode jour) devient violet-500 + bleu-800 "melange" en nuit — accent
+     porte le violet (textes/bordures/surlignage), accent-soft porte le bleu-800 (fonds adoucis), au lieu de
+     rester une simple variante d'orange comme avant. Se propage partout ou --accent/--accent-soft sont deja
+     utilises (ticker, boutons, chips, encadres .spy-trust/.liquid-result, .foot-h, compteur de visites...). */
+  --accent: #8b5cf6;
+  --accent-soft: #1e40af;
+  --coal: #08070a;
+  --ink-contrast: #15121a;
+  --banner-fallback: #0a090d;
+  --banner-img: url(/img/banner-night.webp);
+  --foot-img: url(/img/night-bottom-components.jpg);
+  /* Fond trop lumineux tel quel (retour Naim) : calque --bg a 30% pose sur la photo = photo percue a ~70% d'opacite. */
+  --bg-img: linear-gradient(rgba(18, 16, 22, .3), rgba(18, 16, 22, .3)), url(/img/nightmode.jpg);
+  --card-img-a: url(/img/pixel-plant.jpg);
+  --card-img-b: url(/img/pixel-plant-night.webp);
+  --card-img-c: url(/img/night-bottom-components.jpg);
+  /* Bandeau "en negatif" (Naim 22/09) : fond noir, texte bleu/violet alterne (voir regle .ticker-in span plus bas). */
+  --ticker-bg: #000;
+  --ticker-color: #7c9fff;
+  --ticker-border: #000;
+  --panel-bg: #16213a;
+  --panel-color: #dfe6ff;
+  --stage-a: #201c28;
+  --stage-b: #121016;
+  --placeholder: #241f2c;
+  --drawer-arrow: rgba(139, 92, 246, .6);
+  --aside-bg-img: url(/img/steel5.jpg);
+  color-scheme: dark;
+}
+:root[data-theme="steel"] {
+  --bg: #2a2b2f;
+  --paper: #35363b;
+  --ink: #eceef0;
+  --mute: #a7aab0;
+  --line: #46484e;
+  --line2: #56585f;
+  /* Retour Naim 22/09 : l'accent orange (mode jour) devient jaune-400 en urbex, meme principe que le
+     violet/bleu de nuit ci-dessus (accent-soft = variante sombre de la meme teinte pour les fonds adoucis). */
+  --accent: #facc15;
+  --accent-soft: #4a3d14;
+  --coal: #1a1b1e;
+  --ink-contrast: #15161a;
+  --banner-fallback: #232427;
+  --banner-img: url(/img/banner-urbex.webp); /* asset dedie depose par Naim (22/09, 6e passe) : annule le choix precedent ("meme banniere que le blanc"). */
+  --foot-img: url(/img/steel-bottom-components.png);
+  /* Fond trop lumineux tel quel (retour Naim) : calque --bg a 30% pose sur la photo = photo percue a ~70% d'opacite. */
+  --bg-img: linear-gradient(rgba(42, 43, 47, .3), rgba(42, 43, 47, .3)), url(/img/steel3.jpg);
+  --card-img-a: url(/img/steel.jpg);
+  --card-img-b: url(/img/steel2.jpg);
+  --card-img-c: url(/img/steel4.webp);
+  /* Bandeau (Naim 22/09) : texte blanc sur la photo night-bottom-components (reprise volontaire de cet asset ici),
+     pas de pointilles ici (retire, cf. regle .ticker plus bas). */
+  --ticker-bg: #000; /* repli le temps que la photo charge : jamais le creme du mode blanc */
+  --ticker-bg-img: url(/img/night-bottom-components.jpg);
+  --ticker-color: #fff;
+  --ticker-border: #000;
+  --panel-bg: #55585e;
+  --panel-color: #f2f2f2;
+  --stage-a: #3c3d42;
+  --stage-b: #2a2b2f;
+  --placeholder: #3a3b40;
+  --drawer-arrow: rgba(250, 204, 21, .5);
+  --aside-bg-img: url(/img/steel4.webp);
+  color-scheme: dark;
+}
+/* Police des panneaux langue/theme (Naim 22/09) — fichier depose par Naim dans public/fonts/. */
+@font-face {
+  font-family: "Industrial Poison";
+  src: url(/fonts/Industrial-Poison.ttf) format("truetype");
+  font-display: swap;
+}
+/* Technicz (22/09, retour Naim) : nouvelle police de --head — s'applique donc partout ou --head est deja
+   utilise (onglets .tab, titres de carte .title, boutons .btn...). .chip et .liquid-intro etaient sur
+   --mono (Courier New) : bascules explicitement sur --head pour les 5 captures demandees par Naim (onglets,
+   chips sujets, chips zone Liquid, titres de carte, intro Liquid) — "pas des textes isoles, tous les h/p/
+   button de ce genre". */
+@font-face {
+  font-family: "Technicz";
+  src: url(/fonts/Technicz.ttf) format("truetype");
+  font-display: swap;
+  /* Bug reel trouve en testant (pas visible sur "1997: 14 lignes de HTML", aucun accent dedans) : Technicz.ttf
+     (fichier de 2004) avale les caracteres accentues — pas juste un rendu different, la LETTRE DISPARAIT
+     ("amelioration" -> "am lioration", "Videos" -> "Vid os"). Le navigateur ne bascule PAS tout seul sur le
+     fallback pour ces caracteres : la police contient un glyphe (vide) pour ces codepoints, donc elle repond
+     "j'ai ce caractere" au lieu de laisser la main a "Trebuchet MS" derriere. unicode-range = seule vraie
+     solution : borne Technicz au pur ASCII (U+0000-007F), donc TOUT accent/tiret long/guillemet courbe
+     retombe automatiquement sur le fallback, sans exception a coder par langue ni par selecteur. */
+  unicode-range: U+0000-007F;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; } /* sans ca, .feed{display:grid} etc. gagnent sur l'attribut hidden (meme specificite) */
+/* overflow-x:hidden (Phase G, 23/09) : les volets pub-aside/ads-aside fermes sont pousses hors champ
+   (translateX ±100vw) et elargissaient la page -> defilement horizontal parasite. Clip au niveau html UNIQUEMENT
+   (jamais aussi sur body : casse les sticky, voir body plus bas). Pas sur les asides eux-memes : leur bouton
+   .aside-handle deborde volontairement de leur boite et serait coupe. */
+html { scroll-behavior: smooth; overflow-x: hidden; }
+/* Texture plein-fond (nuit/acier) : largeur 100%, hauteur auto (ratio d'origine, jamais deforme), repetee verticalement. */
+/* Footer colle au bas de l'ecran (retour Naim 22/09) : body en colonne flex pleine hauteur, .centrale
+   (seul enfant "extensible" entre le banner et le footer) grandit pour combler le vide sur les pages courtes
+   (peu d'items charges, ou grand ecran) — sans ca .foot suivait juste la fin du contenu et flottait au milieu
+   de l'ecran au lieu de rester en bas. */
+/* Pas d'overflow-x ici (23/09) : le mettre sur body EN PLUS de html transforme body en conteneur de defilement
+   (overflow-y passe a auto) et CASSE tous les position:sticky (.plant-col, .watch-col) — regression reelle
+   introduite puis mesuree le 23/09 (.plant-col a -1108px au lieu de 68px). Le clip horizontal est sur html. */
+body { margin: 0; min-height: 300vh; display: flex; flex-direction: column; background-color: var(--bg); background-image: var(--bg-img); background-size: 100% auto; background-repeat: repeat-y; background-position: top center; color: var(--ink); font: 15px/1.5 var(--sans); -webkit-font-smoothing: antialiased; transition: background-color .2s, color .2s; }
+/* Fond "day-bg" (Naim 22/09, 8e passe) : theme jour seulement, gere par day-bg.js. Hors flux (absolute,
+   sans ancetre positionne = scrolle avec la page comme .pub-aside/.ads-aside, pas fixed) et hors clic
+   (pointer-events:none) pour ne jamais gener le contenu. object-fit:cover plutot qu'un stretch : recadre
+   sans jamais deformer l'image (meme principe que le fond nuit/acier plus haut, technique differente
+   car ici ce sont plusieurs images distinctes enchainees, pas une seule repetee). */
+/* overflow:hidden (retour Naim 22/09, capture : grande zone texturee vide sous le pied de page) : day-bg.js
+   n'ajoute des segments que par tranche entiere de 300vh (Math.ceil), donc le DERNIER segment peut deborder
+   sous le vrai bas du pied de page de presque 300vh — normal tant que ce debordement restait petit face a une
+   page tres longue, devenu enorme sur une page courte (footer colle en haut, cf. passe precedente). Le calque
+   recoit maintenant une hauteur EXACTE (fixee en JS, pas arrondie a un segment) et overflow:hidden rogne le
+   morceau du dernier segment qui depasserait le pied de page, au lieu de le montrer en entier. */
+/* mix-blend-mode:screen (retour Naim 23/09, "lumiere maximale") : a opacite 1 (montee depuis .1), l'image
+   brute couvrirait entierement le fond creme derriere elle — screen l'eclaircit au maximum en la combinant
+   avec ce qu'il y a dessous au lieu de le masquer, garde le cote "texture lumineuse" plutot qu'une photo dure. */
+#day-bg { position: absolute; top: 300vh; left: 0; width: 100%; z-index: -1; opacity: 1; mix-blend-mode: screen; pointer-events: none; overflow: hidden; }
+/* Pleine largeur, hauteur naturelle (Naim 23/09) : chaque fond montre l'image ENTIERE, sans recadrage — la hauteur
+   de chaque image depend donc de ses proportions, calculee dans day-bg.js. */
+#day-bg img { display: block; width: 100%; height: auto; }
+img, canvas, video, iframe { max-width: 100%; }
+a { color: inherit; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.mono { font-family: var(--mono); letter-spacing: .04em; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* --- Banniere (Naim 22/09) : 1 image + titre aleatoire top-left, pas de "pilule" nulle part --- */
+.banner { position: relative; height: var(--banner-h); overflow: hidden; background: var(--banner-fallback); isolation: isolate; }
+.banner-imgs { position: absolute; inset: 0; background-image: var(--banner-img); background-size: cover; background-position: 50% 35%; background-repeat: no-repeat; filter: saturate(1.05) contrast(1.03); }
+.banner-fade { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 3, 2, .5) 0%, rgba(10, 3, 2, 0) 26%, rgba(10, 3, 2, 0) 62%, rgba(10, 3, 2, .82) 100%); }
+/* Titre aleatoire (6 variantes) : logo = lien d'accueil, seul occupant du coin haut-gauche (plus de pilule "lcoalhost" en double). */
+.banner-title-link { position: absolute; z-index: 1; top: 80px; left: 0; line-height: 0; }
+.banner-title { height: clamp(80px, 20vw, 160px); width: auto; }
+
+/* Nav = juste compteur + classeur, groupes a droite, texte plein sur la banniere (aucun fond en pilule). */
+.navbar { position: absolute; z-index: 2; top: 16px; right: 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.counter { display: inline-flex; align-items: center; gap: 7px; font: 12px var(--mono); color: var(--cream); text-shadow: 0 1px 4px rgba(0, 0, 0, .8); }
+.counter-n { background: var(--coal); color: var(--accent); padding: 3px 7px; letter-spacing: .18em; border: 1px solid #000; box-shadow: inset 0 0 0 1px #3a3038; border-radius: 3px; }
+/* Bouton, pas juste un badge (23/09, retour Naim : deconnexion manquante) : clic = se deconnecter du mode
+   admin (confirm() avant, meme pattern que la suppression d'item, cf. feed.js). */
+.admin-badge { font: 700 11px var(--mono); letter-spacing: .1em; padding: 3px 8px; background: #b3261e; border: 0; color: #fff; border-radius: 3px; cursor: pointer; }
+.admin-badge:hover { background: #8f1e17; }
+/* Alerte quota disque (22/09, "big cleaning") : visible admin uniquement, cf. main.js. Cursor help + title =
+   tooltip natif avec le detail (used/budget), le badge lui-meme reste tres court vu l'espace deja charge de la navbar. */
+.storage-warn { font: 700 11px var(--mono); padding: 3px 8px; background: #b3261e; color: #fff; border-radius: 3px; cursor: help; }
+/* Meme bug de specificite que .embauche-btn (trouve en corrigeant celui-ci) : .btn est definie plus loin dans
+   le fichier et son `border`/`color` gagnaient silencieusement. Selecteur compose pour forcer la priorite. */
+.btn.admin-del { border-color: #b3261e; color: #b3261e; }
+.btn.admin-del:hover { background: #b3261e; color: #fff; }
+
+/* --- Bureau d'embauche (Naim 22/09) : bouton rouge + modal Ouvrier/Contremaitre --- */
+/* Rouge plein, texte blanc, SANS contour, quel que soit le theme (retour Naim 22/09) : .btn de base pose un
+   border + box-shadow bases sur var(--ink), qui change de couleur par theme — neutralises ici explicitement.
+   Selecteur compose (.btn.embauche-btn) plutot que .embauche-btn seul : meme specificite que .btn, donc l'ordre
+   dans le fichier deciderait sinon (bug reel trouve ainsi — .btn est definie APRES et gagnait silencieusement). */
+.btn.embauche-btn { background: #b3261e; border: 0; box-shadow: none; color: #fff; }
+.btn.embauche-btn:hover { background: #8f1e17; }
+.btn.embauche-btn:active { box-shadow: none; }
+.embauche-modal { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, .6); padding: 16px; }
+.embauche-box { position: relative; width: 100%; max-width: 360px; background: var(--paper); border: 1px solid var(--ink); border-radius: 8px; box-shadow: 6px 6px 0 var(--ink); padding: 24px 20px; text-align: center; }
+.embauche-close { position: absolute; top: 10px; right: 10px; background: transparent; border: 0; font: 700 14px var(--mono); color: var(--mute); cursor: pointer; }
+.embauche-h { margin: 0 0 6px; font: 800 18px var(--head); }
+.embauche-sub { margin: 0 0 18px; font-size: 13px; color: var(--mute); }
+.embauche-choices { display: flex; flex-direction: column; gap: 10px; }
+.embauche-pass { display: flex; flex-direction: column; gap: 10px; }
+.embauche-pass input { font: 14px var(--sans); padding: 9px 10px; border: 1px solid var(--line2); border-radius: 4px; background: var(--bg); color: var(--ink); text-align: center; }
+.embauche-msg { margin: 14px 0 0; font: 12px var(--mono); color: var(--mute); min-height: 14px; }
+/* Panneaux langue/theme (Naim 22/09) : rectangle plein retheme, police Industrial Poison, affichent l'etat COURANT
+   (pas la cible du prochain clic — revu sur retour Naim). */
+.lang-switch, .theme-switch { font-family: "Industrial Poison", var(--head); font-size: 15px; letter-spacing: .04em; padding: 4px 11px; background: var(--panel-bg); color: var(--panel-color); border: 0; border-radius: 3px; cursor: pointer; }
+.lang-switch:hover, .theme-switch:hover { filter: brightness(1.12); }
+
+/* Naim 23/09 : tag1 a gauche, tag2 (84 % · 13 % · 2 %, UN seul bloc) a droite, sur toute la largeur
+   (justify-between), a la ligne si ca ne tient pas. left+right au lieu de width:100% : meme largeur utile sans
+   deborder de la marge de 16px. */
+.hero-tag { position: absolute; z-index: 2; left: 16px; right: 16px; bottom: 14px; margin: 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 10px; font: 12px var(--mono); color: var(--cream); }
+.hero-tag span { background: rgba(20, 4, 2, .68); padding: 3px 8px; border-radius: 2px; }
+.hero-tag span:first-child { color: #ffdc94; }
+/* Colonne droite : bouton son AU-DESSUS du debut de tag2 ("au-dessus de 84 %", pas tout a droite). Les 2 cotes
+   alignes par le bas. */
+.hero-tag { align-items: flex-end; }
+.hero-tag-right { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.hero-sound { font: 700 12px var(--mono); letter-spacing: .04em; color: #1a0f08; background: #ffdc94; border: 0; border-radius: 2px; padding: 5px 10px; cursor: pointer; box-shadow: 0 2px 10px rgba(255, 220, 148, .35); }
+.hero-sound:hover { background: #fff; }
+.hero-sound[hidden] { display: none; }
+/* Mode nuit (Naim 23/09) : couleurs EXACTES du logo nuit (img/night/lcoal16.webp, relevees au pixel) — tag1 rose,
+   tag2 cyan, bouton son rose sur le gris du bloc "HOST:", tout en gras. */
+:root[data-theme="night"] .hero-tag > span:first-child { color: #ff00ff; font-weight: 700; }
+:root[data-theme="night"] .hero-tag-right > span { color: #41e5ee; font-weight: 700; }
+/* Police du bouton son en mode nuit (Naim 24/09) : fichier depose par Naim, public/fonts/Russian.ttf. */
+@font-face {
+  font-family: "Russian";
+  src: url(/fonts/Russian.ttf) format("truetype");
+  font-display: swap;
+}
+:root[data-theme="night"] .hero-sound { font-family: "Russian", var(--mono); color: #ff00ff; background: #aaadbf; font-weight: 700; box-shadow: 0 2px 10px rgba(255, 0, 255, .3); }
+:root[data-theme="night"] .hero-sound:hover { background: #c4c7d6; }
+/* Colonne droite en mode nuit (Naim 24/09, precise) : entete WATCH (veille) en rose fluo, LIQUID ENHANCEMENT en cyan. */
+:root[data-theme="night"] .watch-aside .tt-h { color: #ff00ff; text-shadow: 0 0 8px rgba(255, 0, 255, .55); }
+:root[data-theme="night"] .liquid-aside .tt-h { color: #41e5ee; }
+/* Colonne gauche en mode nuit (Naim 24/09) : la centrale ("THE PLANT") passe AVANT les metrics ("YOUR CRAPPY DEV
+   METRICS" = .spy-card), et son titre passe en rose fluo. Reorder via `order` (la .plant-col est un grid) : aucun
+   changement de DOM, night-only. .five (2% survival) reste en dernier. */
+:root[data-theme="night"] .plant-col .plant-card:not(.spy-card) { order: 1; }
+:root[data-theme="night"] .plant-col .spy-card { order: 2; }
+:root[data-theme="night"] .plant-col .five { order: 3; }
+:root[data-theme="night"] .plant-card:not(.spy-card) .plant-head b { color: #ff00ff; text-shadow: 0 0 8px rgba(255, 0, 255, .55); }
+/* Titre "YOUR CRAPPY DEV METRICS" (le mouchard = .spy-card) en cyan (Naim 24/09). */
+:root[data-theme="night"] .spy-card .plant-head b { color: #41e5ee; }
+/* Urbex (Naim 23/09) : aucune couleur changee, SAUF le fond du bouton son au survol = vert fluo du logo
+   (img/lcoal1.webp, releve au pixel). */
+:root[data-theme="steel"] .hero-sound:hover { background: #49fb35; }
+
+/* Bandeau : retheme par mode (blanc=creme, nuit=negatif bleu/violet, urbex=photo texte blanc — cf. --ticker-*). */
+.ticker { overflow: hidden; background-color: var(--ticker-bg); background-image: var(--ticker-bg-img); background-size: cover; background-position: center; border-block: 2px dashed var(--ticker-border); font: 12px var(--mono); color: var(--ticker-color); white-space: nowrap; }
+:root[data-theme="night"] .ticker-in span:nth-child(odd) { color: #7c9fff; }
+:root[data-theme="night"] .ticker-in span:nth-child(even) { color: #c58bff; }
+:root[data-theme="steel"] .ticker { border-block: 0; } /* pas de pointilles en urbex (Naim 22/09) */
+/* Duree remise a l'echelle (120s -> 180s, 23/09) : Naim est passe de 8 a 12 tickers (+50% de texte a lire) —
+   meme principe que le passage 4->8 (60s->120s) : sans ca, plus de texte dans la meme duree = defilement plus
+   rapide, pas plus lent comme on voudrait pour laisser le temps de lire. */
+.ticker-in { display: inline-flex; padding: 6px 0; animation: tick 180s linear infinite; }
+.ticker-in span { padding-right: 56px; }
+.ticker-in span::before { content: "\25B8\00a0"; color: var(--accent); }
+.ticker:hover .ticker-in { animation-play-state: paused; }
+@keyframes tick { to { transform: translateX(-50%); } }
+
+/* --- Mise en page --- */
+:root { --watch-w: minmax(260px, 320px); } /* largeur de l'aside shorts, retrecie quand repliee (voir main.js) */
+.centrale { max-width: 1280px; margin: 0 auto; padding: 28px 16px 64px; display: grid; grid-template-columns: minmax(340px, 42%) minmax(0, 1fr); gap: 28px; align-items: start; width: 100%; flex: 1 0 auto; }
+.plant-col { grid-column: 1; }
+.viewer { grid-column: 2; }
+/* watch-col : wrapper autour de .watch-aside + .liquid-aside (22/09). Bug reel trouve en mesurant (pas
+   devine) : avant ce wrapper, .liquid-aside etait un ENFANT DIRECT de .centrale dans la meme colonne de
+   grille que .watch-aside — CSS Grid l'auto-placait alors sur la ligne 2 du grid, et comme .viewer (colonne
+   2, le feed, tres haut) occupe aussi la ligne 1, la ligne 1 entiere prenait la hauteur du feed en entier :
+   .liquid-aside se retrouvait a des MILLIERS de pixels sous Veille au lieu de juste en dessous (mesure :
+   liquidTop ~6347px vs watchBottom ~493px). Meme fix que .plant-col plus haut : un wrapper qui devient LUI
+   l'unique enfant de grille pour cette colonne, avec son propre display:grid interne pour empiler les 2
+   asides independamment des lignes du grid parent. */
+.watch-col { grid-column: 1 / -1; display: grid; gap: 16px; }
+.watch-toggle { display: none; }
+/* pub-aside/ads-aside (22/09, 6e passe ; volet coulissant 23/09) : position:fixed geree en JS
+   (scroll-anchor.js), PAS des colonnes de grille — "colles a droite/gauche quelle que soit la largeur
+   d'ecran" (demande explicite Naim), donc en dehors du flux de `.centrale`.
+   Retour Naim (23/09) : sous 1700px elles DISPARAISSAIENT completement (display:none) au lieu de devenir des
+   volets fermes accessibles. Desormais toujours affichees (plus de display:none nulle part) : c'est
+   `.aside-body` qui se cache visuellement (transform, pas display), avec un bouton `.aside-handle` toujours
+   cliquable pour l'ouvrir — voir la media query plus bas et wireAsideDrawer() dans main.js. */
+.pub-aside { display: block; } /* la colonne de cercles est portee par .aside-body (flex), pas par l'aside */
+.ads-aside { display: block; }
+/* 3 colonnes (plante/flux/shorts) seulement a partir d'un ecran large (demande Naim 22/09). */
+@media (min-width: 1240px) {
+  .centrale { grid-template-columns: minmax(320px, 34%) minmax(0, 1fr) var(--watch-w); }
+  .plant-col { grid-column: 1; }
+  .viewer { grid-column: 2; }
+  .watch-col { grid-column: 3; }
+}
+/* RESPONSIVE (Naim 24/09 : "le site n'est pas du tout responsive") — sur ordinateur, les volets POUSSENT le contenu au
+   lieu de le recouvrir : --push-l / --push-r = ce que chaque volet occupe au-dela de la marge libre du cote (0 sur
+   grand ecran), calcules par fitCentrale() dans main.js, animes comme le coulissement (.5s). `.narrow` : la place
+   restante, calculee avec les 2 volets OUVERTS (pire cas, pour que la mise en page ne saute pas a leur ouverture),
+   ne suffit pas a 3 colonnes -> 2 colonnes (Veille + Liquid en pleine largeur dessous, comme sous 1240px). */
+@media (min-width: 981px) {
+  .centrale { padding-left: calc(16px + var(--push-l, 0px)); padding-right: calc(16px + var(--push-r, 0px)); transition: padding .5s ease; }
+  .centrale.narrow { grid-template-columns: minmax(340px, 42%) minmax(0, 1fr); }
+  .centrale.narrow .watch-col { grid-column: 1 / -1; position: static; }
+}
+/* Volets de dossier des asides (DIRECTION NAIM 23/09 : "des volets de dossiers, pas des mini tiroirs a trouver en
+   scrollant ; agrandis les fleches interieures, reduis leur largeur, etends-les sur toute la verticalite, couleurs
+   tres discretes par theme, fleches repetees tous les 80vh"). Une bande fine (16px) FIXE sur toute la hauteur de
+   l'ecran, collee au bord (pub a droite, ads a gauche), fleches de 24px repetees tous les 80vh qui defilent avec
+   la page (--scroll-y pose par main.js) : il y en a toujours une en vue. La bande est HORS de l'aside (sinon sa
+   hauteur serait liee a celle de l'aside) et coulisse avec le panneau via un translateX calcule en JS
+   (wireAsideDrawer). Visible a TOUTES les largeurs depuis le 23/09 soir (elle etait cachee a partir de 1700px :
+   sur l'ecran large de Naim, les volets avaient donc disparu). Remplace la petite poignee 26x56 de la 47e passe. */
+/* 23/09 soir : bande = colonne de page (absolute, top/height poses par layoutDrawers() dans main.js : bas du
+   bandeau -> haut du footer), exactement comme son panneau. */
+/* Couleur de bande = fond du footer du theme (--coal, Naim 23/09) ; seules les fleches (--drawer-arrow) changent de
+   teinte selon le theme. */
+.aside-handle { display: block; position: absolute; z-index: 25; width: 16px; padding: 0; border: 0; background: var(--coal); cursor: pointer; transition: transform .5s ease; } /* 2x plus lent (Naim 24/09), = son panneau */
+/* Bande droite 2x plus large (32px, Naim 23/09) : fermee, elle est collee au bord droit ou la barre de defilement
+   (en surimpression sous Windows 11) la recouvrait. Fleche a taille inchangee (16px), dessinee dans la moitie
+   droite du masque : le retournement "ferme" (scaleX(-1)) la place dans la moitie GAUCHE, loin de la barre. */
+#pub-handle { right: 0; width: 32px; }
+#pub-handle::before { -webkit-mask-size: 16px 80vh; mask-size: 16px 80vh; -webkit-mask-position: 100% -30vh; mask-position: 100% -30vh; }
+#ads-handle { left: 0; }
+.aside-handle::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--drawer-arrow);
+  --arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 24'%3E%3Cpath d='M4 4 13 12 4 20z'/%3E%3C/svg%3E");
+  /* La fleche est centree dans sa tuile de 80vh (donc a 40vh) : decaler la tuile de -30vh pose la 1re fleche a 10vh
+     du haut de la bande (Naim 23/09), les suivantes tous les 80vh. La bande defile avec la page : plus de --scroll-y. */
+  -webkit-mask: var(--arrow) 50% -30vh / 100% 80vh repeat-y;
+  mask: var(--arrow) 50% -30vh / 100% 80vh repeat-y;
+}
+/* Sens des fleches : vers l'interieur de l'ecran quand ferme (= "tirer le volet"), vers le bord quand ouvert. */
+#pub-handle::before { transform: scaleX(-1); }
+#pub-handle[aria-expanded="true"]::before { transform: none; }
+#ads-handle[aria-expanded="true"]::before { transform: scaleX(-1); }
+/* VOLETS COULISSANTS (Naim 23/09) : panneau pleine hauteur colle au bord, qui glisse avec sa bande, a toutes les
+   largeurs. Ferme = decale de sa propre largeur, hors champ (html a overflow-x:hidden). */
+.pub-aside, .ads-aside { transition: transform .5s ease; } /* coulissement 2x plus lent (Naim 24/09) */
+.pub-aside { transform: translateX(100%); }
+.ads-aside { transform: translateX(-100%); }
+.pub-aside.open, .ads-aside.open { transform: none; }
+@media (max-width: 980px) {
+  .pub-aside.open { width: 50vw; background-size: 100% auto; } /* = le gauche ouvert (50vw) */
+  .ads-aside.open { width: 50vw; max-width: none; }
+  /* Ouverture automatique mobile = entrouvert a 20 % (Naim 24/09, interstitiel intrusif Google), cf. main.js. */
+  .ads-aside.open.peek { width: 20vw; min-width: 0; }
+  .pub-aside.open .pub-pin { width: 112px; height: 112px; } /* 160 x 0,7 */
+  /* Volet droit entrouvert aussi (Naim 24/09) : 20 % de large, pastilles reduites a la largeur utile (volet - 12px
+     de padding reduit), plafonnees a leur taille normale. */
+  .pub-aside.open.peek { width: 20vw; padding-left: 6px; padding-right: 6px; }
+  .pub-aside.open.peek .pub-pin { width: min(112px, calc(20vw - 12px)); height: min(112px, calc(20vw - 12px)); }
+  /* Lecteur video (Naim 24/09, "juste pour le design") : marge gauche de 50px ; le bloc Watch entier se decale
+     (onglet WATCH + lecteur + categories) pour que l'onglet reste colle au lecteur, sans ecart vertical. */
+  .watch-aside { margin-left: 50px; }
+  .watch-aside .watch-head { margin-bottom: 0; } /* selecteur plus precis : la regle de base (8px) vient plus bas */
+  .ads-aside.open .ads-slot { height: 260px; }
+}
+/* Bug reel signale par Naim : "impossible de descendre sur la Centrale et Survie 2% si le feed de droite se
+   remplit". Cause reelle mesuree : .plant-col (sticky) est passee de 2 a 3 cartes (ajout de "Vos metriques de
+   dev pourri") et depasse largement la hauteur du viewport (1305px pour 850px de fenetre, mesure en vrai) —
+   un element sticky plus haut que l'ecran reste "coince" en haut tant que le conteneur (donc le feed) n'a pas
+   fini de defiler : le bas de la colonne (Centrale, Survie) ne redevient atteignable qu'apres avoir scrolle
+   TOUT le feed, potentiellement des centaines de memes. Corrige en limitant la hauteur de la colonne collee a
+   l'espace ecran reellement disponible sous elle, et en la rendant scrollable EN INTERNE au-dela : le bas de
+   la colonne reste toujours a portee de scroll, independamment de la longueur du feed. */
+/* 100vh et PAS 300vh (retour Naim 23/09 "feed infini = Centrale inatteignable") : le 300vh venait du remplacement
+   global 100vh -> 300vh fait pour le fond jour ; a 300vh la colonne (1447px) depassait l'ecran (900px) sans jamais
+   defiler en interne -> bug d'origine revenu. */
+.plant-col { position: sticky; top: 68px; max-height: calc(100vh - 68px - 16px); overflow-y: auto; display: grid; gap: 16px; }
+.plant-card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; box-shadow: 0 1px 0 var(--line), 0 12px 32px -18px rgba(21, 21, 26, .25); }
+.plant-head { display: flex; justify-content: space-between; align-items: center; padding: 9px 14px; border-bottom: 1px solid var(--line); font: 700 12px var(--mono); letter-spacing: .1em; }
+.plant-head .mono { color: var(--mute); font-weight: 400; }
+.plant-stage { position: relative; height: clamp(300px, 34vw, 450px); background: radial-gradient(120% 90% at 50% 0%, var(--stage-a) 0%, var(--stage-b) 100%); }
+.plant-stage canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; }
+.plant-tip { position: absolute; z-index: 2; pointer-events: none; padding: 4px 9px; background: var(--coal); color: var(--cream); font: 12px var(--mono); white-space: nowrap; box-shadow: 3px 3px 0 var(--accent); }
+.plant-fallback { position: absolute; inset: auto 12px 12px; margin: 0; font: 12px var(--mono); color: var(--mute); }
+.plant-help { margin: 0; padding: 10px 14px 12px; border-top: 1px solid var(--line); font-size: 13px; color: var(--mute); }
+.plant-help b { color: var(--ink); }
+/* "Le Mouchard" (22/09, 8e chantier) : reutilise .plant-card/.plant-head/.plant-stage/.plant-fallback tels
+   quels (meme langage visuel que La Centrale), juste une stage plus petite (pas besoin de 450px pour une tour
+   simple) + un HUD texte (IP/ville/FAI) + le rappel de confiance, toujours visible sous la maquette 3D. */
+.spy-stage { height: clamp(160px, 18vw, 220px); }
+/* Test Naim 23/09 : image en fond des 2 scenes 3D (rendu three.js transparent par-dessus). Memes images dans les 3
+   themes (pas de variante nuit/urbex deposee). Le degrade d'origine reste dessous le temps du chargement. */
+#plant-stage { background: url(/img/bg-centrale.jpg) center / cover no-repeat, radial-gradient(120% 90% at 50% 0%, var(--stage-a) 0%, var(--stage-b) 100%); }
+#spy-stage { background: url(/img/bg-mouchard.jpg) center / cover no-repeat, radial-gradient(120% 90% at 50% 0%, var(--stage-a) 0%, var(--stage-b) 100%); }
+.spy-hud { margin: 0; padding: 10px 14px 0; display: grid; gap: 6px; }
+/* Bug reel trouve en testant "Machine locale (dev)" : en flex+justify-between, overflow-wrap:anywhere sur dd
+   laisse le navigateur reduire sa taille minimale a UN caractere -> flex-shrink ecrasait dd presque a zero,
+   une lettre par ligne. Grid a 2 colonnes (dt = sa largeur naturelle, dd = le reste) + overflow-wrap normal
+   (les valeurs sont des mots/phrases courtes, pas des hash a forcer a couper) : dd garde une largeur reelle,
+   le texte retombe a la ligne par MOT, pas par lettre. */
+.spy-hud > div { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline; }
+.spy-hud dt { margin: 0; font: 12px var(--mono); color: var(--mute); }
+.spy-hud dd { margin: 0; font: 700 12px var(--mono); text-align: right; }
+.spy-hud dd a { color: var(--accent); }
+/* Bouton "details" (23/09, retour Naim) : meme identite que .embauche-btn — blanc sur rouge EN DUR, peu
+   importe le theme (jour/nuit/urbex), pas de variable --ink/--mute qui changerait de couleur par mode. */
+.spy-detail-btn { margin-left: 4px; padding: 1px 6px; font: 11px var(--mono); background: #b3261e; border: 0; border-radius: 3px; color: #fff; cursor: pointer; }
+.spy-detail-btn:hover { background: #8f1e17; }
+/* --- Labo Pentest (23/09, demande Naim) : version agrandie/redesignee du micro-popover "details" du Mouchard
+   (l'ancien .tracker-modal, retire — plus utilise, cf. main.js/pentest-modal.js). Overlay centre, meme pattern
+   que .embauche-modal/.embauche-box (deja le seul autre "vrai" modal centre du site) mais nettement plus large
+   et plus riche : rappel DNT/GPC/bloqueur + 4 outils de pentesting reels en onglets, presentes en decouverte
+   pedagogique (Lcoalhost se teste LUI-MEME, jamais le visiteur). --- */
+.pentest-backdrop { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; background: rgba(0, 0, 0, .68); padding: 16px; }
+.pentest-modal { position: relative; width: 100%; max-width: 560px; max-height: calc(100vh - 32px); overflow-y: auto; background: var(--paper); border: 1px solid var(--ink); border-radius: 10px; box-shadow: 8px 8px 0 var(--ink); padding: 26px 24px 20px; }
+.pentest-close { position: absolute; top: 12px; right: 12px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-size: 20px; line-height: 1; background: none; border: 1px solid var(--line2); border-radius: 999px; color: var(--mute); cursor: pointer; }
+.pentest-close:hover { border-color: var(--ink); color: var(--ink); }
+.pentest-head { margin: 0 34px 4px 0; }
+.pentest-title { margin: 0; font: 700 22px var(--head); }
+.pentest-tag { margin: 2px 0 0; font: 12px var(--mono); color: var(--mute); }
+.pentest-intro { margin: 12px 0; font-size: 13px; line-height: 1.55; color: var(--ink); }
+.pentest-you { margin: 0 0 16px; padding: 10px 12px; display: grid; gap: 6px; background: var(--stage-b); border-radius: 6px; }
+.pentest-h { margin: 0 0 2px; font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--mute); }
+.pentest-you .row { display: flex; justify-content: space-between; gap: 8px; font: 12px var(--mono); }
+.pentest-you .row b { font-weight: 700; }
+.pentest-tool { display: grid; gap: 6px; padding: 14px 14px 16px; background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 4px; }
+.pentest-tool-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.pentest-name { font: 700 18px var(--head); }
+.pentest-angle { font: 11px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--mute); }
+.pentest-license { margin: 0; font: 11px var(--mono); color: var(--mute); }
+.pentest-blurb { margin: 2px 0 0; font-size: 13px; line-height: 1.55; }
+.pentest-status { margin: 4px 0 0; font: 11px/1.5 var(--mono); color: var(--mute); }
+.pentest-status span { font-weight: 700; color: var(--ink); }
+.pentest-visit { margin-top: 6px; justify-self: start; }
+/* 2 bannieres par ligne (Naim 23/09) : les 4 visuels sont des bannieres-pubs rectangulaires 1280x400 preparees
+   par Naim — les ronds de 56px les rendaient minuscules et illisibles. Ce ne sont PAS les pastilles de l'aside. */
+.pentest-switch { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 16px 0 12px; } /* 4 sur une ligne (Naim 23/09) */
+.pentest-trust { margin: 0; padding: 8px 10px; background: var(--stage-b); border-left: 3px solid var(--accent); font: 11px/1.5 var(--mono); color: var(--ink); }
+/* Bannieres outils cliquables (Naim 23/09) : format d'origine 1280x400 affiche EN ENTIER (plus de ronds de 56px,
+   illisibles). Fichiers de Naim dans public/pubs/ (mapping LOGO_FILES dans pentest-modal.js). */
+.pentest-tab { display: block; width: 100%; aspect-ratio: 1280 / 400; padding: 0; border-radius: 5px; border: 2px solid var(--line2); overflow: hidden; background: var(--paper); cursor: pointer; transition: transform .25s ease, box-shadow .15s; }
+.pentest-tab img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+/* Survol (Naim 23/09) : plus de bordure coloree, reduction douce a 0,8. */
+.pentest-tab:hover { transform: scale(.8); }
+.pentest-tab.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+/* Metriques bidons (22/09, demande Naim) : "Aujourd'hui vous avez failli ingerer" / "Vos selles seront".
+   Retour Naim (passe suivante) : ne doivent PAS se distinguer visuellement des autres lignes du Mouchard
+   (ecriture/couleur/disposition identiques) — annule le choix precedent ("texte courant a part" parce que
+   labels/valeurs plus longs que IP/FAI/ecran) : meme grille 2 colonnes auto/1fr que .spy-hud dt/dd, meme
+   police mono, meme label mute + valeur en gras alignee a droite. Les valeurs plus longues retombent a la
+   ligne par mot comme n'importe quelle autre ligne du HUD (overflow-wrap normal, pas de cas particulier). */
+.spy-gag { margin: 10px 14px 0; display: grid; gap: 6px; }
+.spy-gag p { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: baseline; }
+.spy-gag-label { font: 12px var(--mono); color: var(--mute); }
+.spy-gag p b { font: 700 12px var(--mono); text-align: right; }
+.spy-trust { margin: 10px 14px 12px; padding: 8px 10px; background: var(--accent-soft); border-left: 3px solid var(--accent); font: 11px/1.5 var(--mono); color: var(--ink); }
+.five { padding: 14px 16px; background: var(--paper); border: 1px solid var(--line); border-left: 5px solid var(--accent); border-radius: 4px 10px 10px 4px; font-size: 14px; }
+.five p { margin: 0 0 10px; }
+.five-h { font-weight: 700; color: var(--accent); margin-bottom: 4px !important; }
+
+/* --- Onglets, filtres --- */
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+/* Retour Naim (23/09, ajout du 7e onglet Tutoriels) : les 2 rangees de boutons doivent toujours faire toute
+   la largeur du bandeau (la ligne du bas, border-bottom de .tabs, fait deja 100% quel que soit le nombre de
+   boutons/leur repartition en rangees). flex:1 1 auto sur .tab exploite le comportement natif de
+   flex-wrap : chaque rangee EST sa propre ligne flex, donc flex-grow redistribue l'espace en trop
+   independamment par rangee — les boutons s'etirent pour combler exactement chaque ligne, et se contractent
+   pareil au redimensionnement, sans JS ni recalcul manuel. */
+.tab { flex: 1 1 auto; text-align: center; font: 700 14px var(--head); padding: 8px 16px; background: var(--paper); border: 1px solid var(--line2); border-bottom-width: 3px; border-radius: 6px 6px 0 0; cursor: pointer; color: var(--ink); }
+.tab:hover { border-color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--ink-contrast); border-color: var(--ink); box-shadow: inset 0 -3px 0 var(--accent); }
+.filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 14px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 700 12px var(--head); padding: 4px 10px; background: transparent; border: 1px solid var(--line2); border-radius: 999px; cursor: pointer; color: var(--ink); }
+.chip:hover { border-color: var(--ink); }
+/* Choix invalide dans un contexte donne (ex. langue ES pour un MEME, cf. post.js) : jamais juste masque —
+   visible mais clairement inerte, avec un `title` qui explique pourquoi. */
+.chip:disabled { opacity: .35; cursor: not-allowed; }
+.chip:disabled:hover { border-color: var(--line2); }
+.chip.on { background: var(--ink); border-color: var(--ink); color: var(--ink-contrast); }
+.sort-group { display: inline-flex; align-items: center; gap: 8px; }
+.sort { display: inline-flex; border: 1px solid var(--line2); border-radius: 6px; overflow: hidden; }
+.sort button { font: 12px var(--mono); padding: 5px 11px; background: var(--paper); border: 0; cursor: pointer; color: var(--mute); }
+.sort button + button { border-left: 1px solid var(--line2); }
+.sort button.on { background: var(--accent-soft); color: var(--ink); font-weight: 700; }
+/* "Taux de charbon en fusion" (22/09, demande Naim) : ratio Like/Hate site entier, meme rectangle que .sort
+   juste a cote (pas une pilule .chip, un rectangle plein comme demande). Tooltip = "Like vs Hate" (mots
+   anglais gardes tels quels dans les 3 langues, cf. rx.LIKE/rx.DISLIKE plus bas). */
+.melt-rate { display: inline-flex; align-items: baseline; gap: 5px; padding: 5px 11px; border: 1px solid var(--line2); border-radius: 6px; background: var(--paper); font: 12px var(--mono); color: var(--mute); cursor: help; }
+.melt-rate b { color: var(--accent); font-size: 13px; }
+.status { margin: 28px 0; text-align: center; font: 14px var(--mono); color: var(--mute); }
+
+/* --- Cartes --- */
+/* align-items:start retire (retour Naim 22/09 : "les 4 boutons du bas ne sont pas alignes") : les cartes ont
+   des hauteurs de contenu tres variables (image/txtmeme, titre 1 ou 2 lignes...), donc en "start" chaque carte
+   garde sa hauteur naturelle et les rangees d'actions finissent a des niveaux differents d'une carte a l'autre
+   sur la meme ligne de la grille. Stretch (comportement par defaut de CSS grid, plus besoin de le preciser)
+   + .actions{margin-top:auto} plus bas : toutes les cartes d'une meme ligne s'egalisent sur la plus haute,
+   et les boutons se retrouvent tous alignes sur le meme bord bas. */
+.feed { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.feed.list { grid-template-columns: 1fr; gap: 12px; }
+/* Textures alternees (nuit/acier, Naim 22/09) : 3 variantes cyclees par position dans la grille, pas sur la centrale/l'edito.
+   Posee en ::before a opacite reduite (PAS un blend-mode sur le fond direct) : le texte des cartes reste lisible
+   quelle que soit la zone de la photo tombant derriere lui. Historique : "multiply" ecrasait la photo vers le
+   noir (invisible, 1er retour Naim) ; "screen" plein la rendait illisible sous le texte (2e essai) ; opacite
+   fixe sur un calque separe regle les deux. */
+.card, .hcard { position: relative; background-color: var(--paper); }
+.card::before, .hcard::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none; background-image: var(--card-img); background-size: cover; background-position: center; opacity: .42; }
+.card > *, .hcard > * { position: relative; z-index: 1; }
+.card:nth-child(3n+1), .hcard:nth-child(3n+1) { --card-img: var(--card-img-a); }
+.card:nth-child(3n+2), .hcard:nth-child(3n+2) { --card-img: var(--card-img-b); }
+.card:nth-child(3n+3), .hcard:nth-child(3n+3) { --card-img: var(--card-img-c); }
+/* Hover retire (retour Naim 22/09 : "inutile") : plus de translateY/box-shadow au survol de la carte entiere. */
+.card { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+/* .lower (22/09, 5e retour Naim) : card-body et like-row COTE A COTE, plutot que like-row seul en pleine
+   largeur sous l'image — celui-ci laissait un enorme vide a gauche des icones (mesure reellement : jusqu'a
+   322px de blanc sur une carte de 447px de large). Le texte remplit desormais cet espace au lieu de rien. */
+.lower { display: flex; align-items: flex-start; justify-content: space-between; gap: 4px; }
+/* Like/dislike (22/09, 4e retour Naim, capture validee "c'est ca que je veux") : image sans chrome, compteur
+   TOUJOURS visible (0 inclus) A COTE de l'icone (pas en badge dans le coin). */
+.like-row { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; padding: 12px 14px 0 0; }
+.like-btn { position: relative; display: flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; cursor: pointer; }
+.like-btn img { display: block; width: 92px; height: 92px; object-fit: contain; transition: transform .12s; flex-shrink: 0; }
+.like-btn b { font: 700 16px var(--mono); color: var(--ink); }
+.like-btn:hover img { transform: scale(1.1); }
+.like-btn.on img { filter: drop-shadow(0 0 6px var(--accent)) saturate(1.3); }
+.media { display: block; position: relative; width: 100%; padding: 0; border: 0; background: var(--placeholder); cursor: pointer; }
+.media img, .media video { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; background: var(--placeholder); }
+.media.cover img { aspect-ratio: 16 / 7; object-fit: cover; }
+.video-thumb { aspect-ratio: 16 / 9; }
+.video-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.play { position: absolute; inset: 0; margin: auto; width: 54px; height: 54px; background: rgba(21, 21, 26, .86); box-shadow: 4px 4px 0 var(--accent); }
+.play::after { content: ""; position: absolute; left: 21px; top: 15px; border-left: 18px solid var(--cream); border-block: 12px solid transparent; }
+.video-thumb:hover .play { background: var(--accent); box-shadow: 4px 4px 0 var(--ink); }
+.player { aspect-ratio: 16 / 9; }
+.player iframe, .player video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+/* Surface pleine et lisible (pas de texture directement sous le gros texte de meme) : la texture de la carte
+   reste visible autour, dans .card-body/.actions (cf. .card::before plus haut). */
+.txtmeme { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; padding: 20px; background: var(--paper); border-bottom: 3px solid var(--ink); position: relative; }
+.txtmeme::before { content: ""; position: absolute; top: 12px; left: 20px; width: 44px; height: 5px; background: var(--accent); }
+.tm-top { margin: 14px 0 0; font: 800 clamp(19px, 2.1vw, 26px)/1.15 var(--head); }
+.tm-bot { margin: 0; font: 600 clamp(15px, 1.6vw, 19px)/1.25 var(--head); color: #3d3c45; }
+.broken { padding: 28px 16px; text-align: center; font: 13px var(--mono); color: var(--mute); background: var(--placeholder); }
+/* gap 6px -> 8px (retour Naim 22/09 : "aeration pas respectee entre les lignes de texte") : un peu plus de
+   respiration entre chip/titre/meta. */
+.card-body { flex: 1; min-width: 0; padding: 12px 8px 4px 14px; display: grid; gap: 8px; }
+.chip-topic { justify-self: start; font: 700 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; background: var(--ink); color: var(--ink-contrast); }
+.chip-topic.t-survie { background: var(--accent); color: #fff; }
+.chip-topic.t-cybersec { background: #3a3038; color: #fff; }
+/* "Pub maison" (23/09) : etiquette toujours visible en premier (avant le chip sujet), jamais masquee en pub
+   native trompeuse. Bordure carte discrete assortie, pas un encadrement criard. */
+.chip-topic.t-sponsored { background: var(--accent); color: #fff; }
+.card.sponsored { border-color: var(--accent); }
+.title { margin: 0; font: 700 16px/1.3 var(--head); text-decoration: none; overflow-wrap: anywhere; }
+a.title:hover { color: var(--accent); text-decoration: underline; }
+.title.plain { font-weight: 600; font-size: 14px; }
+.meta { margin: 0; font: 11px var(--mono); color: var(--mute); overflow-wrap: anywhere; }
+/* Retour Naim 22/09 : le bas de la carte (reactions + boutons d'action) en flex/justify-between plutot
+   qu'empile en grid — rxrow a gauche, btnrow a droite, sur la meme ligne (wrap si la carte est trop etroite). */
+/* margin-top:auto (22/09) : pousse les actions tout en bas de la carte (.card est deja flex-column) — c'est
+   CA qui aligne reellement les boutons entre cartes voisines, en tandem avec le retrait de align-items:start
+   sur .feed plus haut (les deux ensemble ; l'un sans l'autre ne suffit pas). */
+.actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 8px 14px 14px; margin-top: auto; }
+.rxrow, .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Bouton "Comments on <site>" (Naim 24/09, capture) : dans l'ESPACE VIDE sous la ligne source/auteur/date, a gauche
+   des cercles like/dislike. La colonne de texte s'etire jusqu'en bas des cercles (.lower en stretch, .card-body en
+   colonne flex, meme ecart de 8px qu'avant) et le bouton se centre dans la place libre restante (marges auto).
+   Une seule ligne ; nom de site trop long coupe en "...". */
+.lower { align-items: stretch; }
+.card-body { display: flex; flex-direction: column; }
+.comments-btn { display: block; margin: auto; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 11px var(--mono); padding: 5px 10px; }
+/* Contenu maison (source = le site) : mention inactive, pas un lien (Naim 24/09). */
+.comments-btn.is-off, .comments-btn.is-off:hover { cursor: default; opacity: .6; border-color: var(--line2); color: var(--mute); }
+.rx { font: 12px var(--mono); padding: 4px 9px; background: var(--paper); border: 1px solid var(--line2); border-radius: 4px; cursor: pointer; color: var(--ink); box-shadow: inset 0 -2px 0 rgba(21, 21, 26, .06); }
+.rx b { margin-left: 6px; color: var(--accent); }
+.rx:hover { border-color: var(--ink); }
+.rx.on { background: var(--accent-soft); border-color: var(--accent); }
+.btn { font: 700 12px var(--head); padding: 5px 11px; background: var(--paper); border: 1px solid var(--ink); border-radius: 4px; cursor: pointer; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; box-shadow: 2px 2px 0 var(--ink); }
+.btn:hover { background: var(--accent-soft); }
+.btn:active { transform: translate(2px, 2px); box-shadow: none; }
+.btn.ghost { border-color: var(--line2); box-shadow: none; color: var(--mute); font-weight: 600; }
+.btn.ghost:hover { border-color: var(--ink); color: var(--ink); }
+.btn.on { background: var(--ink); color: var(--ink-contrast); }
+.btn b { margin-left: 6px; color: var(--accent); }
+.more { display: block; margin: 24px auto 0; padding: 9px 22px; font-size: 14px; }
+
+/* --- Hacks (recettes payantes, 22/09) --- */
+.hintro { margin: 0 0 18px; color: var(--mute); font-size: 14px; }
+.hgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding-bottom: 70px; }
+.hcard { border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 8px; align-content: start; }
+.hcard.unlocked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.hcard-pick { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.hcard-pick input { width: 17px; height: 17px; accent-color: var(--accent); flex: none; }
+.hcard-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex: 1; font: 700 15px var(--head); }
+.hprice { font: 700 13px var(--mono); color: var(--accent); }
+.hteaser { margin: 0; font-size: 13px; color: var(--mute); }
+.hsource { margin: 0; font-size: 10px; color: var(--line2); }
+.hbody { margin-top: 6px; padding-top: 10px; border-top: 1px dashed var(--line2); font-size: 13px; line-height: 1.6; }
+.hbody h4 { margin: 12px 0 4px; font-size: 14px; }
+.hbody pre { background: var(--coal); color: var(--cream); padding: 10px 12px; border-radius: 6px; overflow-x: auto; font: 12px var(--mono); }
+.hbody code { font-family: var(--mono); }
+.hbody :first-child { margin-top: 0; }
+.hbar { position: sticky; bottom: 16px; margin-top: -54px; display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 18px; background: var(--ink); color: var(--ink-contrast); border-radius: 10px; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .5); }
+.hbar-txt { font: 13px var(--mono); }
+.hbar-pay { background: var(--accent); border-color: var(--accent); color: #fff; }
+.hbar-pay:disabled { opacity: .5; cursor: not-allowed; }
+
+/* --- Add Coal (soumission visiteur, 22/09) --- */
+.coal-quota { margin: -8px 0 16px; color: var(--mute); }
+.coal-form { display: grid; gap: 14px; max-width: 480px; }
+.coal-kinds { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; }
+.coal-kinds label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.coal-field { display: grid; gap: 5px; font-size: 13px; font-weight: 700; }
+.coal-field input, .coal-field textarea { font: 14px var(--sans); font-weight: 400; padding: 8px 10px; background: var(--paper); border: 1px solid var(--line2); border-radius: 4px; color: var(--ink); }
+.coal-field textarea { resize: vertical; min-height: 70px; }
+.coal-field small { font-weight: 400; color: var(--mute); }
+.coal-form .btn { justify-self: start; }
+/* Poster (23/09, SPEC-ROADMAP.md Phase A) : reutilise .coal-form/.coal-field tels quels (meme formulaire
+   admin, meme langage visuel), juste les 3 selecteurs chips (type/langue/sujet) et la case "pub maison" en
+   plus, propres a ce formulaire. */
+.post-row { display: grid; gap: 5px; }
+.post-label { font-size: 13px; font-weight: 700; }
+.post-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.post-sponsored { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.coal-msg { margin: 0; text-align: left; }
+
+/* --- Aside "shorts" (veille TikTok/Instagram, 22/09) : lecteur vertical a defilement ancre (scroll-snap),
+   repliable via #watch-collapse. Meme donnees que l'ancien aside TikTok, presentation remaniee "shorts". ---
+   Repli anime (retour Naim, passe suivante) : ni watch-aside ni liquid-aside n'avaient de largeur propre
+   (voir --watch-w plus haut, retire) ; le repli se joue donc uniquement sur la HAUTEUR, via le classique
+   "accordion CSS grid" (grid-template-rows auto 1fr -> auto 0fr, anime nativement, pas besoin de connaitre la
+   hauteur du contenu a l'avance). Remplace le display:none instantane d'avant : impossible a animer, et c'est
+   lui qui causait le "saut soudain" signale par Naim quand Veille et Liquid Enhancement se repliaient a la
+   fois. min-height:0 sur le contenu est requis, sinon un enfant de grille refuse de descendre sous sa taille
+   naturelle et la ligne ne peut jamais vraiment atteindre 0fr. */
+.watch-aside, .liquid-aside { display: grid; grid-template-rows: auto 1fr; transition: grid-template-rows .3s ease; }
+.watch-aside.collapsed, .liquid-aside.collapsed { grid-template-rows: auto 0fr; }
+.watch-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.watch-collapse { font: 700 13px var(--mono); padding: 3px 9px; background: var(--paper); border: 1px solid var(--line2); border-radius: 4px; cursor: pointer; color: var(--ink); transition: transform .15s; }
+.watch-aside.collapsed .watch-collapse { transform: rotate(-90deg); }
+.tiktok-rail { display: grid; gap: 10px; align-content: start; overflow: hidden; min-height: 0; }
+.tt-h { margin: 0; padding: 8px 12px; background: var(--coal); color: var(--cream); font: 700 11px var(--mono); letter-spacing: .12em; border-radius: 6px 6px 0 0; }
+/* Lecteur "taille mobile" (Naim 23/09) : UN clip a la fois dans un cadre 9:16, defilement facon swipe — aimante
+   (scroll-snap mandatory) et arrete a CHAQUE clip (scroll-snap-stop:always : un geste = un clip, jamais trois
+   d'un coup), SANS barre de defilement visible. La molette au-dessus du cadre (y compris au-dessus du lecteur
+   TikTok : son iframe ne defile pas, le geste remonte au cadre) passe au clip suivant/precedent. */
+.tt-frame { position: relative; }
+.tt-content:has(.tt-list) { aspect-ratio: 9 / 16; max-height: 82vh; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; border-radius: 8px; background: #000; }
+.tt-content:has(.tt-list)::-webkit-scrollbar { display: none; }
+.tt-list { height: 100%; }
+.tt-clip { position: relative; height: 100%; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; scroll-snap-align: start; scroll-snap-stop: always; }
+.tt-platform { position: absolute; z-index: 1; top: 6px; left: 6px; font: 700 10px var(--mono); letter-spacing: .06em; padding: 2px 6px; background: var(--ink); color: var(--ink-contrast); border-radius: 3px; }
+.tt-clip iframe { border: 0; }
+.tt-player { display: block; width: 100%; height: 100%; }
+/* Videos de secours (public/videos/) : entieres dans le cadre 9:16, bandes noires si le format differe. */
+.tt-video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; cursor: pointer; }
+/* Calque "swipe" (voir tiktok.js) : couvre la video mais PAS les 56px du bas (barre de progression / volume /
+   plein ecran de TikTok, qui restent cliquables). */
+.tt-swipe { position: absolute; inset: 0 0 56px 0; z-index: 1; cursor: pointer; }
+/* Calque traversable quand la souris s'immobilise sur une video TikTok (tiktok.js, 24/09) : le clic arrive alors aux
+   boutons du lecteur TikTok, ou qu'ils soient (remplace le trou central fixe, qui ratait le bouton play). */
+.tt-swipe.pass { pointer-events: none; }
+.tt-clip-oembed { overflow-y: auto; scrollbar-width: none; }
+/* Bouton son global SUR le lecteur (Naim 23/09) : meme etat que le bouton fixe en bas a droite (sound.js). */
+.tt-sound { position: absolute; z-index: 2; top: 8px; right: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; padding: 0; background: rgba(0, 0, 0, .55); color: #fff; border: 0; border-radius: 999px; cursor: pointer; }
+.tt-sound:hover { background: var(--accent); }
+.tt-content:not(:has(.tt-list)) ~ .tt-sound { display: none; }
+.tt-empty, .tiktok-rail .status { margin: 0; padding: 14px 12px; background: var(--paper); border: 1px solid var(--line); border-top: 0; border-radius: 0 0 8px 8px; font-size: 12px; color: var(--mute); }
+/* Accordeon categories atelier (23/09, demande Naim) : discret par defaut (replie), meme liste .chip que le
+   filtre sujets du feed principal (deja stylee) — juste le toggle + le conteneur qui sont propres ici. Labels
+   = noms de dossiers de Naim, jamais traduits (cf. tiktok.js). */
+.tt-cats-toggle { display: flex; align-items: center; gap: 4px; width: 100%; padding: 6px 2px; background: none; border: 0; border-top: 1px dashed var(--line2); font: 700 11px var(--mono); letter-spacing: .04em; color: var(--mute); cursor: pointer; text-transform: uppercase; }
+.tt-cats-toggle:hover { color: var(--ink); }
+.tt-cats-toggle[aria-expanded="true"] .tt-cats-chevron { transform: rotate(180deg); }
+.tt-cats-chevron { transition: transform .15s; }
+.tt-cats-list { margin-top: 8px; max-height: 220px; overflow-y: auto; }
+@media (min-width: 1240px) {
+  /* sticky deplace de .watch-aside vers .watch-col (22/09, cf. commentaire plus haut). Retour Naim (22/09,
+     passe suivante) : le plafond/scroll interne (max-height + overflow-y:auto) est retire expres — il voulait
+     voir le composant Liquid en entier, pas coince dans une fenetre qui capture le scroll ; desormais la
+     colonne reste sticky (pinned) mais sans plafond, donc scroller dessus fait defiler TOUTE la page, jusqu'a
+     ce que la colonne se decolle naturellement une fois son contenu entierement passe. Le defilement des clips
+     vit desormais dans le cadre 9:16 (.tt-content, 23/09), plus sur .tiktok-rail. */
+  /* top ajuste par main.js (fitWatchCol, 24/09) quand la colonne depasse l'ecran : elle monte avec la page jusqu'a
+     ce que Liquid soit visible, puis se colle (sinon Liquid restait sous l'ecran pour toujours). */
+  .watch-col { position: sticky; top: 68px; }
+  /* ads-extra toujours visible sur desktop (Naim 24/09) : accessible au scroll SANS devoir replier Veille+Liquid
+     (l'ancien gating ":has(collapsed)" empechait de scroller jusqu'aux pubs du bas). Selecteur `.watch-col >` pour
+     l'emporter sur la regle mobile `.ads-extra{display:none}` situee plus bas (meme specificite sinon). min-height =
+     strip d'encarts genereux sous Liquid, rempli par ads-aside.js (repeat). Hauteur FIXE volontairement : l'ancrer au
+     footer creerait une boucle de layout (ads-extra en flux pousse le footer -> recalcul infini ; les volets gauche
+     l'evitent en position:absolute). */
+  .watch-col > .ads-extra { display: block; overflow: hidden; min-height: 80vh; }
+}
+
+/* --- Liquid Enhancement (22/09, demande Naim) : "fenetre depliante identique" a Veille juste au-dessus —
+   meme bouton replier (.watch-collapse reutilise tel quel pour le look), etats de repli/formulaire propres
+   a .liquid-aside. --- */
+.liquid-aside.collapsed .watch-collapse { transform: rotate(-90deg); }
+.liquid-body { display: grid; gap: 10px; overflow: hidden; min-height: 0; }
+/* T360 (22/09) : mascotte maison generee (ComfyUI/Flux, PAS une reproduction du buste Terminator sous
+   licence STUDIOCANAL ni de la photo retro fournies en reference — juste inspiree de la pose/coiffure/tenue).
+   Image 600x1280 (ratio 300x640 demande, x2 pour rester nette en retina) posee en fond d'un bloc au ratio
+   fixe ; le texte se pose en gris fonce dans un bandeau clair en bas de l'image (zone bureau/ordi, plus
+   neutre que le buste qui remplit le reste du cadre) plutot que directement sur le personnage. */
+/* Bug reel trouve en testant : avec un max-height:320px, le texte (long, plusieurs lignes a 11px sur ~220px
+   de large) prenait presque toute la hauteur du bandeau et cachait la mascotte — plafond arbitraire trop bas
+   par rapport au ratio 300x640 demande. Retire le plafond : l'image garde sa vraie proportion portrait,
+   largement assez haute pour laisser le buste visible ET un bandeau de texte lisible en bas. */
+.liquid-hero { position: relative; aspect-ratio: 300 / 640; border-radius: 6px; overflow: hidden; background: url('/img/t360-liquid-bg.webp') top center / cover no-repeat; }
+.liquid-intro { position: absolute; left: 0; right: 0; top: 0; margin: 0; padding: 10px 12px; background: transparent; font: 700 16px/1.5 var(--head); color: #585755; }
+/* Bouton "close that awkwardness now" (Naim 24/09) : pose en absolute sur la photo T360, ferme le Liquid Enhancer
+   (main.js). Look retro (boxy, ombre dure, mono) et mix-blend-mode: difference = melange maximal (inverse la photo
+   derriere), donc lisible et cohérent dans TOUS les themes sans couleur par theme. */
+.liquid-close-awkward { position: absolute; left: 20px; bottom: 20px; z-index: 2; padding: 8px 12px; font: 700 12px var(--mono); letter-spacing: .04em; color: #fff; background: #000; border: 2px solid #fff; border-radius: 2px; box-shadow: 3px 3px 0 #fff; cursor: pointer; mix-blend-mode: difference; }
+.liquid-close-awkward:hover { transform: translate(1px, 1px); box-shadow: 2px 2px 0 #fff; }
+/* Boutons Liquid Customizer (chips zone + Liquefier/Soumettre) : retour Naim 22/09 — carre (pas la pilule
+   .chip habituelle), fond noir plein, texte blanc, TOUJOURS (pas seulement l'etat .on), et un survol qui
+   change par theme plutot que le survol neutre de .chip/.btn. Scope volontairement etroit (.liquid-areas
+   .chip + #liquid-enhance/#liquid-submit) : ne touche pas aux .chip du filtre sujets plus bas sur la page,
+   qui restent en pilule transparente comme avant. margin-top ajoute expres (retour Naim : "colle au bottom
+   de l'image, aucun margin-top") en plus du gap de .liquid-body, et width:fit-content pour que les chips ne
+   lisent pas comme une bande pleine largeur d'un bord a l'autre. */
+.liquid-areas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.liquid-areas .chip,
+#liquid-enhance,
+#liquid-submit {
+  width: fit-content;
+  border-radius: 0;
+  background: #000;
+  border-color: #000;
+  color: #fff;
+  box-shadow: none;
+}
+.liquid-areas .chip.on { background: #000; border-color: #000; color: #fff; }
+.liquid-areas .chip:hover,
+#liquid-enhance:hover,
+#liquid-submit:hover {
+  background: #b91c1c; /* jour (defaut) : rouge-700 */
+  border-color: #b91c1c;
+  color: #fff;
+}
+:root[data-theme="steel"] .liquid-areas .chip:hover,
+:root[data-theme="steel"] #liquid-enhance:hover,
+:root[data-theme="steel"] #liquid-submit:hover {
+  background: #facc15; /* urbex : jaune-400 */
+  border-color: #facc15;
+  color: #000;
+}
+:root[data-theme="night"] .liquid-areas .chip:hover,
+:root[data-theme="night"] #liquid-enhance:hover,
+:root[data-theme="night"] #liquid-submit:hover {
+  background: #1e3a8a; /* nuit : bleu-900 */
+  border-color: #1e3a8a;
+  color: #8b5cf6; /* violet-500 */
+}
+#liquid-input { font: 13px var(--sans); padding: 8px 10px; background: var(--paper); border: 1px solid var(--line2); border-radius: 4px; color: var(--ink); resize: vertical; }
+.liquid-result { display: grid; gap: 8px; padding: 10px; background: var(--accent-soft); border-left: 3px solid var(--accent); border-radius: 4px; }
+.liquid-result-label { margin: 0; font: 700 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--mute); }
+.liquid-result-text { margin: 0; font-size: 13px; }
+#liquid-enhance, #liquid-submit { justify-self: start; }
+
+/* --- Aside pub (meme principe que studio-ai/MegaStudio, demande Naim 22/09) : 5 pastilles rondes 70px,
+   1 des 2 jeux tire au hasard au chargement (voir main.js), href="#" tant que Naim n'a pas fourni les URLs
+   (etat identique aux implementations source — pas une omission de ma part).
+   Position (6e/7e passe, retours Naim) : collee a droite QUELLE QUE SOIT la largeur ("right:10px"), pas une
+   colonne de grille — `position` geree entierement par JS (scroll-anchor.js, 3 zones : absolute sous la
+   banniere/ticker au chargement, fixed une fois cette zone passee, absolute figee 20px sous l'edito 2%). Le
+   CSS ne pose qu'un `position:absolute` de repli le temps que le JS s'execute — jamais `fixed` en dur, ca
+   chevauchait la banniere avant le moindre scroll (bug reel corrige le 22/09). --- */
+/* 23/09 (Naim) : aside x1.6 (pastilles 70 -> 112px, ecart 12 -> 19px), fond acier par theme (--aside-bg-img), et
+   TOUTES les images de pubs/ affichees (pub.js) : la colonne peut depasser l'ecran -> hauteur bornee a la zone
+   visible sous le top fixe de scroll-anchor.js (68px) + defilement interne sans barre (comme le lecteur shorts). */
+/* Volets coulissants (Naim 23/09 soir) : colonne de page du bas du bandeau au haut du footer (top/height poses par
+   layoutDrawers() dans main.js), collee au bord (right/left:0), sans arrondi ni ombre ni marge. Contenu en flux,
+   pose sur le fond, qui defile avec la page (jamais de defilement interne). */
+/* Fond (Naim 23/09) : image entiere en largeur (contain en x), repetee en hauteur (repeat-y). */
+.pub-aside, .ads-aside { position: absolute; z-index: 5; background: var(--aside-bg-img) top center / 100% auto repeat-y; }
+.pub-aside .aside-body, .ads-aside .aside-body { position: relative; } /* pose sur le fond, defile avec la page */
+/* Fond droit a la MEME taille que le gauche (largeur de .ads-aside : 15vw bornee 120-170px), parti de left 0 / top 0
+   de l'aside (Naim 23/09) : l'image est simplement coupee a droite, l'aside droit etant plus etroit. */
+.pub-aside { right: 0; padding: 14px 12px; background-size: clamp(120px, 15vw, 170px) auto; background-position: 0 0; }
+/* Les cercles sont dans .aside-body (pas enfants directs de l'aside) : c'est LUI qui porte la colonne et l'ecart de
+   5px (Naim 23/09) — le gap pose sur .pub-aside ne s'appliquait a rien. */
+.pub-aside .aside-body { display: flex; flex-direction: column; align-items: center; gap: 15px; } /* 5 + 10px (Naim 23/09) */
+.ads-aside { padding: 10px; }
+.pub-label { margin: 0; color: var(--mute); letter-spacing: .12em; font-size: 10px; }
+.pub-pin { width: 78px; height: 78px; /* 112 x 0,7 (Naim 23/09) */ border-radius: 999px; border: 1px solid var(--line2); display: flex; align-items: center; justify-content: center; overflow: hidden; text-decoration: none; background: var(--paper); transition: background .15s; flex: none; }
+.pub-pin img { max-width: 130%; max-height: 130%; object-fit: contain; pointer-events: none; transition: transform .15s; }
+.pub-pin.crop img { width: 100%; height: 100%; object-fit: cover; max-width: none; max-height: none; }
+.pub-pin:hover { background: var(--pub-bg); }
+.pub-pin:hover img { transform: scale(1.1); }
+
+/* --- Aside ads-placeholder (marge gauche, demande Naim 22/09) : pile de rectangles gris "Your ad here",
+   meme logique fixed->absolute que pub-aside (scroll-anchor.js). Purement decoratif (aria-hidden). --- */
+.ads-aside { left: 0; width: 15vw; min-width: 120px; max-width: 170px; }
+/* Lisibilite sur les fonds acier (Naim 23/09) : plus d'opacite globale (elle delavait aussi le texte) ; voile sombre
+   translucide + texte blanc plein, lisible sur les 3 aciers comme sur le fond clair de #ads-extra. */
+.ads-slot { display: flex; align-items: center; justify-content: center; width: 100%; height: 220px; margin-bottom: 16px; background: rgba(0, 0, 0, .55); border-radius: 6px; }
+.ads-slot span { font: 700 12px var(--mono); letter-spacing: .06em; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .8); text-align: center; padding: 0 10px; }
+/* Encart 1 VIDE cliquable (Naim 24/09) : "vous pourriez etre ici". Vide de texte ; un "+" discret suggere l'action.
+   Clic -> formulaire de devis (quote-modal.js, delegation dans main.js). */
+.ads-slot-cta { border: 2px dashed rgba(255, 255, 255, .4); background: rgba(0, 0, 0, .3); cursor: pointer; padding: 0; position: relative; }
+.ads-slot-cta::after { content: "+"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font: 300 40px var(--mono); color: rgba(255, 255, 255, .45); transition: color .15s ease, transform .15s ease; }
+.ads-slot-cta:hover::after { color: #fff; transform: scale(1.15); }
+/* Formulaire de devis : reprend le modal du Labo Pentest (.pentest-*), champ texte simple. */
+.quote-form { display: grid; gap: 12px; margin-top: 12px; }
+.quote-field { display: grid; gap: 6px; font: 700 12px var(--mono); letter-spacing: .04em; color: var(--ink); }
+.quote-field textarea { width: 100%; resize: vertical; min-height: 110px; padding: 10px; border: 1px solid var(--line2); border-radius: 6px; background: var(--paper); color: var(--ink); font: 14px var(--sans); }
+.quote-note { margin: 0; font-size: 11px; color: var(--mute); }
+.quote-msg { margin: 0; }
+.quote-ok { color: var(--accent); font-weight: 700; }
+
+/* --- Encarts pub tiers REELS (23/09, Phase E) : remplace .ads-slot placeholder quand approuve+actif.
+   Etiquette "Publicite"/"Ad" toujours visible en surimpression = distinction stricte vs pub maison
+   (SPEC-ROADMAP.md Phase E point 5), jamais masquee ni en plus petit que le lisible. --- */
+.ads-slot-real { position: relative; display: block; opacity: 1; overflow: hidden; text-decoration: none; }
+.ads-slot-real img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Encarts carres maison (pubs/squares/, Naim 24/09) : image carree entiere, pas recadree en rectangle 220px.
+   Selecteurs doubles pour passer devant la hauteur fixe du volet mobile ouvert (.ads-aside.open .ads-slot). */
+.ads-aside .ads-slot.ads-slot-square, .ads-extra .ads-slot.ads-slot-square { height: auto; aspect-ratio: 1 / 1; background: none; }
+.ads-slot-badge { position: absolute; top: 6px; left: 6px; z-index: 1; font: 700 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--paper); background: rgba(0,0,0,.6); padding: 2px 6px; border-radius: 4px; }
+
+/* --- Encarts supplementaires colonne droite (Naim 23/09) : memes rectangles que l'aside gauche (.ads-slot),
+   n'apparaissent QUE quand Veille ET Liquid Enhancement sont tous les deux replies (la place liberee). --- */
+.ads-extra { display: none; } /* mobile : masque (pas de pave de placeholders dans le flux etroit) ; desktop -> block plus bas */
+
+/* --- Bascule mobile "Videos / Le reste" (22/09) : n'apparait qu'en dessous de 980px, cf. main.js --- */
+.watch-toggle { border: 1px solid var(--line2); border-radius: 8px; overflow: hidden; }
+.watch-toggle button { flex: 1; font: 700 13px var(--head); padding: 10px; background: var(--paper); border: 0; border-right: 1px solid var(--line2); cursor: pointer; color: var(--mute); }
+.watch-toggle button:last-child { border-right: 0; }
+.watch-toggle button.on { background: var(--ink); color: var(--ink-contrast); }
+
+/* --- Menu "Classer" --- */
+.pop { position: absolute; z-index: 40; width: 210px; padding: 8px; display: grid; gap: 4px; background: var(--paper); border: 1px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.pop-h { margin: 0 0 2px; font: 700 11px var(--mono); color: var(--mute); }
+.pop button { text-align: left; font: 13px var(--sans); padding: 5px 8px; background: transparent; border: 0; cursor: pointer; }
+.pop button:hover { background: var(--accent-soft); }
+.pop form { display: flex; gap: 4px; margin-top: 4px; }
+.pop input { flex: 1; min-width: 0; font: 13px var(--sans); padding: 5px 7px; border: 1px solid var(--line2); }
+.pop form button { background: var(--ink); color: var(--ink-contrast); text-align: center; }
+
+/* --- Pied de page --- */
+/* Texture "bottom-components" ajoutee par theme (nuit: brique noire+jaune, steel: metal gris) : voir --foot-img. */
+.foot { background-color: var(--coal); background-image: var(--foot-img); background-size: cover; background-position: center; background-blend-mode: multiply; color: #d8d3c6; padding: 30px 16px 18px; border-top: 6px solid var(--accent); }
+.foot-in { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; font-size: 13px; }
+.foot-in p { margin: 0 0 6px; }
+.foot-h { color: var(--accent); font-weight: 700; font-size: 12px; }
+.foot-src { color: #a8a294; }
+.foot-legal-links { max-width: 1280px; margin: 24px auto 0; display: flex; gap: 16px; font: 12px var(--mono); }
+.foot-legal-links a { color: var(--mute); text-decoration: underline; }
+.foot-legal-links a:hover { color: var(--accent); }
+.foot-legal { max-width: 1280px; margin: 8px auto 0; font: 11px var(--mono); color: #85806f; }
+
+/* --- Remonter en haut (Naim 22/09) : apparait apres un peu de scroll, cf. main.js --- */
+/* --drawer-r (24/09, main.js fitCentrale) = largeur occupee a droite par le volet pub (bande + panneau s'il est
+   ouvert) : les 3 boutons flottants se decalent a sa gauche au lieu de passer sur les pastilles. */
+.to-top, .to-footer, .sound-fab { transition: right .5s ease; }
+.to-top { position: fixed; z-index: 30; right: calc(68px + var(--drawer-r, 0px)); bottom: 18px; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font: 16px var(--mono); background: var(--ink); color: var(--ink-contrast); border: 0; border-radius: 999px; cursor: pointer; box-shadow: 0 6px 18px -6px rgba(0, 0, 0, .5); }
+.to-top:hover { background: var(--accent); }
+/* A cote du bouton remonter (Naim 22/09, 8e passe) : triangle vers le bas, "aller au pied de page" —
+   visible seulement tant que le footer n'est pas encore a l'ecran (IntersectionObserver, cf. main.js). */
+.to-footer { right: calc(118px + var(--drawer-r, 0px)); }
+/* Son global (Naim 23/09) : tout a droite, a droite de ▲ ▼ (decales de 50px vers la gauche pour lui faire place). */
+.sound-fab { right: calc(18px + var(--drawer-r, 0px)); }
+
+/* --- Responsive --- */
+@media (max-width: 980px) {
+  .centrale { grid-template-columns: 1fr; gap: 20px; padding-top: 20px; }
+  /* Bug reel trouve en testant (23/09, audit responsive demande par Naim) : .centrale passait bien a 1
+     colonne ici, mais .plant-col/.viewer gardaient leur `grid-column: 1`/`grid-column: 2` du desktop (jamais
+     reinitialises) — un placement EXPLICITE force la grille a creer une 2e colonne IMPLICITE pour le satisfaire,
+     meme quand grid-template-columns n'en definit qu'une. Resultat mesure : tout le contenu ecrase sur 2
+     colonnes de ~138px/~227px au lieu d'empiler en pleine largeur (mobile visiblement casse, capture a
+     l'appui). `grid-column: auto` laisse le placement automatique suivre l'ordre DOM/`order` normalement. */
+  .plant-col, .viewer, .watch-col { grid-column: auto; }
+  /* "aside video en premier apres la banniere" (Naim 22/09) : la grille reste en ordre DOM, seul l'ordre visuel
+     change. watch-aside PUIS liquid-aside restent empiles dans cet ordre A L'INTERIEUR de .watch-col.
+     max-height/overflow-y du scroll interne (voir regle de base) n'ont plus de sens en mobile (position:static,
+     page normale) : reinitialises, sinon la colonne garderait un scroll interne parasite ici aussi. */
+  .watch-col { order: 1; position: static; max-height: none; overflow-y: visible; }
+  .watch-toggle { order: 2; display: flex; }
+  .plant-col { order: 4; position: static; max-height: none; overflow-y: visible; }
+  .viewer { order: 5; }
+  .plant-stage { height: clamp(260px, 62vw, 400px); }
+  .foot-in { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  :root { --banner-h: 240px; }
+  .counter-l { display: none; }
+  .tab { padding: 7px 12px; font-size: 13px; }
+  .feed { grid-template-columns: 1fr; }
+  .hero-tag { font-size: 11px; left: 10px; right: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ticker-in { animation: none; }
+  .card { transition: none; transform: none; }
+}

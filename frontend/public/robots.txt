@@ -1,0 +1,5 @@
+# Lcoalhost — tout le monde peut lire, humains, moteurs, agents IA compris (rien de prive a proteger ici).
+User-agent: *
+Allow: /
+
+Sitemap: https://lcoalhost.lol/sitemap.xml

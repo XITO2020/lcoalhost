@@ -1,0 +1,3 @@
+# Veille Lcoalhost — une URL TikTok ou Instagram par ligne (+ une note optionnelle apres un espace).
+# Colle ici ce que tu partages en scrollant. Lance ensuite: npm run watch:import
+# Les lignes traitees avec succes disparaissent d'ici ; celles en echec restent avec le motif en commentaire.

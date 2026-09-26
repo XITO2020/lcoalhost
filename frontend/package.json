@@ -1,0 +1,22 @@
+{
+  "name": "lcoalhost-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lcoalhost — front vanilla JS + Vite : hero pixel art, Centrale 3D (three.js), flux memes/videos/articles",
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/gen-banner-titles.js && node scripts/gen-day-bg.js && node scripts/gen-pubs.js && node scripts/gen-backup-videos.js",
+    "dev": "vite --port 5180 --strictPort",
+    "prebuild": "node scripts/gen-banner-titles.js && node scripts/gen-day-bg.js && node scripts/gen-pubs.js && node scripts/gen-backup-videos.js",
+    "build": "vite build",
+    "preview": "vite preview --port 4180 --strictPort",
+    "banner-titles": "node scripts/gen-banner-titles.js",
+    "day-bg": "node scripts/gen-day-bg.js"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}

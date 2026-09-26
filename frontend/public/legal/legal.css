@@ -1,0 +1,17 @@
+/* Feuille dediee aux pages legales (Naim 22/09, 8e passe) : pages statiques hors SPA, jamais passees par le
+   build Vite (servies telles quelles depuis public/legal/) — pas de dependance a style.css (qui, lui, est
+   fingerprinte au build et n'existerait plus a ce chemin en production). Theme clair uniquement, palette
+   alignee sur --bg/--paper/--ink/--accent du site principal (valeurs copiees, pas de var() partagee possible
+   ici puisque ce fichier est independant). */
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #f7ece0; color: #15151a; font: 15px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+.back { display: inline-block; margin-bottom: 24px; color: #6b6a72; text-decoration: none; font: 13px "Courier New", monospace; }
+.back:hover { color: #e8622c; }
+h1 { font-size: 26px; margin: 0 0 4px; }
+.updated { color: #6b6a72; font: 13px "Courier New", monospace; margin: 0 0 32px; }
+h2 { font-size: 16px; margin: 32px 0 8px; border-bottom: 2px solid #15151a; padding-bottom: 4px; }
+p { margin: 0 0 12px; white-space: pre-line; }
+a { color: #e8622c; }
+.note { margin-top: 40px; padding: 14px 16px; background: #fde9df; border-left: 3px solid #e8622c; font-size: 13px; }

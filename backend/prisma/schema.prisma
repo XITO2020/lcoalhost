@@ -1,0 +1,493 @@
+// Lcoalhost — schema Prisma (base DEDIEE `lcoalhost`, jamais partagee avec TC/Conspix).
+// Conventions ecosysteme : models PascalCase, champs camelCase, enums SCREAMING_SNAKE.
+// Pas de compte : le visiteur est un cookie anonyme (`lh_vid`) ; reactions et classeur y sont rattaches.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ItemKind {
+  MEME
+  VIDEO
+  ARTICLE
+}
+
+enum ItemStatus {
+  PUBLISHED
+  HIDDEN
+}
+
+// LINK   = on ne garde que l'URL + les metadonnees (defaut de tout contenu tiers).
+// MIRROR = le fichier est copie sur NOS disques (uniquement si `reusable`, cf. storage/policy.ts).
+enum StorageMode {
+  LINK
+  MIRROR
+}
+
+enum LinkStatus {
+  UNKNOWN
+  OK
+  DEAD
+}
+
+enum ReactionType {
+  LOL      // mdr
+  JERRY    // "c'est moi au boulot"
+  UTILE    // j'ai appris un truc
+  ALERTE   // a faire suivre (cybersec / survie)
+  LIKE     // pouce leve (22/09) — mutuellement exclusif avec DISLIKE, cf. items/routes.ts
+  DISLIKE  // pouce baisse (22/09)
+}
+
+model Item {
+  id            String      @id @default(cuid())
+  kind          ItemKind
+  source        String // reddit | hackernews | devto | lobsters | lemmy | peertube | rss | lcoalhost
+  sourceId      String
+  sourceLabel   String // c/programmer_humor, Hacker News, DEV, CERT-FR, Lcoalhost...
+  title         String
+  caption       String? // legende basse des memes-texte maison
+  permalink     String // page d'origine (toujours creditee dans l'UI)
+  discussionUrl String?
+  mediaUrl      String? // image / video directe (source)
+  embedUrl      String? // lecteur integrable (PeerTube)
+  thumbUrl      String?
+  author        String?
+  topic         String      @default("general") // js python css ia cybersec devops survie general
+  // Langue du CONTENU (22/09, pas juste de l'UI) : EN = base (scraping US-priorise), FR = secondaire ET plus
+  // riche (memes maison de Naim en FR exclusif + adaptations FR "version drole" des memes EN de l'agent).
+  // Seul le kind MEME est filtre strictement par lang cote API ; ARTICLE/VIDEO restent montres quelle que
+  // soit la langue de l'UI (un titre HN en anglais est normal a lire meme en mode FR).
+  lang          String      @default("en")
+  score         Int         @default(0) // score de la source
+  reactionCount Int         @default(0) // total local, sert au tri "top"
+  downloadCount Int         @default(0)
+
+  // --- Politique lien / copie ---
+  license       String? // libelle de licence tel que donne par la source
+  reusable      Boolean     @default(false) // droit de copier + telecharger (licence permissive ou contenu maison)
+  storage       StorageMode @default(LINK)
+  localPath     String? // chemin relatif sous MIRROR_DIR quand storage = MIRROR
+  mirroredAt    DateTime?
+  // Octets sur disque, renseigne uniquement quand storage = MIRROR (capture PENDANT la copie, zero cout
+  // supplementaire, meme principe que contentHash) ou au moment de l'approbation Add Coal (stat() du fichier
+  // copie). Sert au "big cleaning" par quota (storage/budget.ts, 22/09) : jamais recalcule en scannant le
+  // disque a chaque fois.
+  fileSize      Int?
+  // Protege du "big cleaning" (purge automatique par quota disque, cf. storage/budget.ts) — reserve a l'admin,
+  // distinct du Shelf (classeur personnel par visiteur, qui ne protege rien).
+  pinned        Boolean     @default(false)
+  // "Pub maison" (23/09, SPEC-ROADMAP.md Phase A/B) : item poste par l'admin qui fait la promo d'un autre
+  // projet Naim/ecosysteme (ex. TabascoCity) plutot qu'un vrai meme/video/article trouve ailleurs. Affiche
+  // avec une etiquette "Partenaire" explicite dans le feed — jamais masque en pub native trompeuse.
+  sponsored     Boolean     @default(false)
+  // sha256 du fichier calcule PENDANT la copie disque (zero cout reseau supplementaire). Sert a detecter les
+  // reposts identiques d'une source a l'autre (meme meme re-uploade sur 2 subs Reddit, ou Reddit + Lemmy).
+  // Non nul = "deja tente" (MIRROR reussi OU doublon repere) : promoteMirrors() ne retente jamais un item hashe.
+  // Limite assumee : hash EXACT (octet a octet), pas perceptuel — un recadrage/recompression n'est pas detecte.
+  contentHash   String?
+  linkStatus    LinkStatus  @default(UNKNOWN)
+  linkCheckedAt DateTime?
+
+  status        ItemStatus  @default(PUBLISHED)
+  publishedAt   DateTime
+  fetchedAt     DateTime    @default(now()) // derniere fois que une source nous l'a remonte (sert a la purge)
+
+  reactions Reaction[]
+  shelves   Shelf[]
+
+  @@unique([source, sourceId])
+  @@index([kind, status, publishedAt])
+  @@index([kind, status, reactionCount])
+  @@index([kind, lang, status])
+  @@index([topic])
+  @@index([storage, reusable])
+  @@index([contentHash])
+  @@index([storage, pinned, mirroredAt])
+}
+
+model Reaction {
+  id        String       @id @default(cuid())
+  itemId    String
+  visitorId String
+  type      ReactionType
+  createdAt DateTime     @default(now())
+  item      Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, visitorId, type])
+  @@index([visitorId])
+}
+
+// "Classer" = ranger dans son classeur (dossiers libres, par visiteur).
+model Shelf {
+  id        String   @id @default(cuid())
+  itemId    String
+  visitorId String
+  folder    String   @default("Mon classeur")
+  createdAt DateTime @default(now())
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, visitorId])
+  @@index([visitorId, folder])
+}
+
+// Compteur de visites facon 1997.
+model Counter {
+  key   String @id
+  value Int    @default(0)
+}
+
+model ScrapeRun {
+  id         String    @id @default(cuid())
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  report     Json? // { connecteur: { fetched, upserted, error? }, _mirror: {...}, _links: {...} }
+}
+
+// ============================================================================
+// PAIEMENTS — copie du skill .claude/skills/multi-payment-rails (22/09/2026), colle tel quel.
+// Un seul rail cable pour l'instant (Stripe, compte SASU TabascoCity, PAS ENCORE LIVE — KYC en cours) ;
+// ajouter un rail = ajouter la valeur d'enum + l'adapter, jamais toucher a ces modeles.
+// ============================================================================
+
+enum PaymentRail {
+  STRIPE
+  PAYPAL
+  REVOLUT
+  TEZOS
+  HYPERLIQUID
+  MONERO
+}
+
+enum PaymentIntentStatus {
+  PENDING
+  SEEN
+  PAID
+  EXPIRED
+  FAILED
+  REFUNDED
+}
+
+model PaymentIntent {
+  id             String              @id @default(cuid())
+  siteId         String
+  rail           PaymentRail
+  status         PaymentIntentStatus @default(PENDING)
+
+  orderRef       String
+  description    String
+  amountEur      Decimal             @db.Decimal(12, 2)
+  userId         String?
+  metadata       Json?
+
+  payCurrency    String?
+  payAmount      Decimal?            @db.Decimal(30, 0)
+  payDecimals    Int?
+  payToAddress   String?
+  uniqueRef      String?
+  rateEurPerUnit Decimal?            @db.Decimal(18, 8)
+
+  externalId     String?             @unique
+  checkoutUrl    String?
+
+  txRef          String?             @unique
+  paidAt         DateTime?
+  paidAmount     Decimal?            @db.Decimal(30, 0)
+  payerRef       String?
+  fulfilledAt    DateTime?
+  ecosystemCreditedAt DateTime?
+
+  expiresAt      DateTime
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  events         PaymentEvent[]
+
+  @@index([siteId, rail, status])
+  @@index([rail, status, expiresAt])
+  @@index([orderRef])
+  @@index([userId])
+}
+
+model PaymentEvent {
+  id        String        @id @default(cuid())
+  intentId  String
+  intent    PaymentIntent @relation(fields: [intentId], references: [id], onDelete: Cascade)
+  rail      PaymentRail
+  type      String
+  txRef     String        @default("")
+  payload   Json?
+  createdAt DateTime      @default(now())
+
+  @@unique([intentId, txRef, type])
+  @@index([rail, type, createdAt])
+}
+
+model PaymentCursor {
+  rail      PaymentRail @id
+  cursor    String
+  updatedAt DateTime    @updatedAt
+}
+
+// ============================================================================
+// HACKS — la partie SPECIFIQUE Lcoalhost au-dessus du moteur de paiement generique (meme patron que
+// Zarmazon Order/OrderItem). Un "hack" = une recette ecrite (technique dev/design), gated : teaser public,
+// corps complet debloque apres achat. Pas de compte : le visiteur (cookie `lh_vid`) est l'identite d'achat.
+// Prix VOULU par Naim (22/09) : 1 hack = 4,44 € (444) ; exactement 3 hacks = 8,88 € (888) ; sinon refuse.
+// ============================================================================
+
+model Hack {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  teaser      String // visible sans achat
+  body        String // recette complete (markdown), visible seulement si debloque
+  sourceNote  String? // d'ou vient la technique (MCP/outil source), transparence
+  priceCents  Int       @default(444) // prix informatif a l'unite ; le total reel est recalcule serveur (1 ou pack de 3)
+  published   Boolean   @default(false) // ecrit par Claude = false par defaut, Naim relit avant publication
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  orderItems  HackOrderItem[]
+  unlocks     HackUnlock[]
+}
+
+enum HackOrderStatus {
+  PENDING
+  PAID
+  EXPIRED
+  REFUNDED
+}
+
+model HackOrder {
+  id              String          @id @default(cuid())
+  ref             String          @unique // reference humaine courte, ex LH-2026-XXXXXX
+  visitorId       String
+  totalCents      Int
+  status          HackOrderStatus @default(PENDING)
+  paymentIntentId String?         @unique
+  createdAt       DateTime        @default(now())
+
+  items           HackOrderItem[]
+}
+
+model HackOrderItem {
+  id      String    @id @default(cuid())
+  orderId String
+  order   HackOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  hackId  String
+  hack    Hack      @relation(fields: [hackId], references: [id])
+
+  @@index([orderId])
+  @@index([hackId])
+}
+
+// Acces debloque : un visiteur qui a paye peut relire le hack (meme navigateur = meme cookie).
+model HackUnlock {
+  id        String   @id @default(cuid())
+  hackId    String
+  hack      Hack     @relation(fields: [hackId], references: [id])
+  visitorId String
+  orderId   String
+  unlockedAt DateTime @default(now())
+
+  @@unique([hackId, visitorId])
+  @@index([visitorId])
+}
+
+// ============================================================================
+// TIKTOK RAIL — aside droite (desktop) / bloc pleine largeur (mobile), lecteur TikTok + veille par mots-cles.
+// SCRAPING PAS ENCORE CABLE (decision Naim en attente, cf. CLAUDE.md) : ce modele existe pour que le front
+// ait quelque chose a afficher (curation manuelle possible via `source = "manuel"`) sans dependre du connecteur.
+// ============================================================================
+
+enum ClipPlatform {
+  TIKTOK
+  INSTAGRAM
+}
+
+// "Clip" couvre TikTok ET Instagram (22/09, veille Naim) : videoId = id TikTok ou shortcode Instagram selon platform.
+model TiktokClip {
+  id          String   @id @default(cuid())
+  source      String // "manuel" (Naim/Claude ajoute a la main) | "watch-dump" (import de veille, cf. watch/import-dump.ts) | "tiktok" (scraper, PAS ACTIF)
+  platform    ClipPlatform @default(TIKTOK)
+  videoId     String // id TikTok ou shortcode Instagram, unique PAR platform
+  embedHtml   String // HTML officiel oEmbed (TikTok ou Instagram, tokenless) : jamais de video re-hebergee
+  authorHandle String?
+  caption     String?
+  note        String? // annotation libre de Naim au moment du partage (pourquoi ce clip), optionnelle
+  topic       String // un des mots-cles de la liste Naim (dev, rgpd, css, vibecode, ia, hacking, ...)
+  publishedAt DateTime?
+  addedAt     DateTime @default(now())
+  status      ItemStatus @default(PUBLISHED)
+
+  @@unique([platform, videoId])
+  @@index([topic, status, addedAt])
+}
+
+// ============================================================================
+// ADD COAL — soumissions des visiteurs (demande Naim 22/09) : un lien TikTok, un lien d'article, ou une
+// image, 1 par visiteur par jour. Filtre IA (Ollama local) trie ce qui n'entre dans AUCUN sujet tech AVANT
+// que Naim ne voie quoi que ce soit — mais la relecture humaine reste la seule chose qui publie vraiment
+// (meme principe que agent memes : status intermediaire, jamais publie automatiquement).
+//
+// ⚠️ "connecte depuis TabascoCity" (email TC) : PAS une vraie authentification ici (Lcoalhost n'a pas de
+// compte, et verifier un compte TC demanderait de toucher le backend de TabascoCity, hors perimetre de
+// cette session) — c'est un champ auto-declare, une friction legere + une attribution, pas une garantie.
+// ============================================================================
+
+enum CoalKind {
+  TIKTOK
+  ARTICLE
+  IMAGE
+  LINK // 23/09 (Naim) : n'importe quel lien — article, video ou meme ; c'est Qwen qui decide (aiKind)
+}
+
+enum CoalStatus {
+  PENDING_AI     // vient d'arriver, pas encore classee
+  REJECTED_AI    // l'IA locale juge que ca n'entre dans aucun sujet tech -> jamais montre a Naim
+  PENDING_REVIEW // a passe le filtre IA, attend Naim (coal:review)
+  APPROVED       // Naim a valide -> Item/TiktokClip cree
+  REJECTED       // Naim a refuse malgre le feu vert de l'IA
+}
+
+model CoalSubmission {
+  id          String     @id @default(cuid())
+  visitorId   String // meme cookie que reactions/classeur : sert aussi au quota 1/jour
+  tcEmail     String? // auto-declare, NON verifie (voir note ci-dessus)
+  kind        CoalKind
+  url         String? // TIKTOK ou ARTICLE
+  imagePath   String? // IMAGE : chemin relatif sous UPLOAD_DIR
+  description String // texte obligatoire du soumetteur ; sert de base au filtre IA (surtout pour IMAGE)
+  status      CoalStatus @default(PENDING_AI)
+  aiTopic     String?
+  aiReason    String?
+  // Classement par Qwen d'un LINK (23/09) : section du site (ARTICLE | VIDEO | MEME), langue du contenu (filtre
+  // des memes/articles par langue) et ce que l'inspection de la page a trouve (titre, vignette, media, lecteur).
+  aiKind      String?
+  aiLang      String?
+  aiMeta      Json?
+  resultItemId String? // Item ou TiktokClip.id cree a l'approbation, pour tracer
+  createdAt   DateTime   @default(now())
+  reviewedAt  DateTime?
+
+  @@index([visitorId, createdAt])
+  @@index([status, createdAt])
+}
+
+// ============================================================================
+// LIQUID ENHANCEMENT (22/09, demande Naim) : le visiteur decrit une idee d'amelioration pour une des 3 parties
+// du site (metrics/videos/articles+memes), un LLM local (Qwen via Ollama, meme mecanisme que agents/
+// meme-writer.ts) la reformule en version "liquide" plus concrete. Si le visiteur est satisfait, il peut la
+// soumettre — TOUJOURS en PENDING_REVIEW, jamais applique automatiquement (meme discipline que Add Coal et
+// l'agent memes : aucune publication/modification auto, seule la relecture manuelle de Naim decide).
+// ============================================================================
+
+enum LiquidArea {
+  METRICS         // "Vos metriques de dev pourri" (Le Mouchard)
+  VIDEOS          // captation/scraping des videos
+  ARTICLES_MEMES  // captation/scraping des articles et memes
+}
+
+enum LiquidStatus {
+  PENDING_REVIEW
+  APPROVED  // Naim a lu et retient l'idee — ne cree rien automatiquement, juste un marqueur de suivi
+  REJECTED
+}
+
+model LiquidSubmission {
+  id         String       @id @default(cuid())
+  visitorId  String // meme cookie que reactions/classeur/coal : sert aussi au quota par jour
+  area       LiquidArea
+  rawInput   String // idee brute tapee par le visiteur
+  enhanced   String // version reformulee par Qwen (Ollama local, zero cout)
+  status     LiquidStatus @default(PENDING_REVIEW)
+  createdAt  DateTime     @default(now())
+  reviewedAt DateTime?
+
+  @@index([visitorId, createdAt])
+  @@index([status, createdAt])
+}
+
+// ============================================================================
+// REGIE PUB TIERCE (23/09, SPEC-ROADMAP.md Phase E) : particuliers/entreprises soumettent un encart self-
+// serve, paient immediatement (meme rail Stripe que Hacks — reutilise PaymentIntent/PaymentEvent existants,
+// pas de 2e provider de paiement). Statut PENDING_REVIEW jusqu'a relecture Naim (meme discipline que Coal/
+// Liquid : jamais publie automatiquement). Rejet = remboursement manuel via le dashboard Stripe, meme motif
+// deja assume pour les Hacks ("PAS D'ADMIN/AUTH... pas de route de remboursement automatisee").
+// Pas d'upload d'image cote Lcoalhost (evite d'ouvrir un 2e pipeline de stockage/moderation de fichiers) :
+// l'annonceur fournit une URL vers son propre visuel deja heberge.
+// ============================================================================
+enum AdPosition {
+  PUB_ASIDE // pastille ronde, rotation avec les promos maison (cf. pub.js)
+  ADS_ASIDE // rectangle (cf. ads.js)
+}
+
+enum AdSlotStatus {
+  PENDING_REVIEW // paye, attend la relecture de Naim (ads:review)
+  APPROVED       // affiche reellement sur le site tant que endDate n'est pas depassee
+  REJECTED       // refuse malgre le paiement -> remboursement manuel Stripe (dashboard, pas de route auto)
+  EXPIRED        // endDate depassee, desactive automatiquement (cron, meme motif que le scraper)
+}
+
+model Advertiser {
+  id        String   @id @default(cuid())
+  name      String // societe OU nom/pseudo pour un particulier
+  email     String
+  note      String? // message libre du soumissionnaire (contexte, demande particuliere)
+  createdAt DateTime @default(now())
+  adSlots   AdSlot[]
+
+  @@index([email])
+}
+
+model AdSlot {
+  id              String       @id @default(cuid())
+  advertiserId    String
+  advertiser      Advertiser   @relation(fields: [advertiserId], references: [id])
+  position        AdPosition
+  imageUrl        String // l'annonceur heberge son propre visuel (pas d'upload cote Lcoalhost, cf. note plus haut)
+  linkUrl         String
+  tooltip         String // texte court affiche au survol (pub-aside) ou dans l'encart (ads-aside)
+  startDate       DateTime
+  endDate         DateTime
+  priceCents      Int
+  status          AdSlotStatus @default(PENDING_REVIEW)
+  orderRef        String?      @unique // reference PaymentIntent, meme motif que HackOrder.ref
+  paymentIntentId String?
+  createdAt       DateTime     @default(now())
+  reviewedAt      DateTime?
+
+  @@index([status, endDate])
+  @@index([advertiserId, createdAt])
+}
+
+// Mesure pub anonyme (23/09, SPEC-ROADMAP.md Phase D.4) : affichages REELS (encart vu a l'ecran) + clics, par
+// encart et par jour, pour donner un taux de clic reel a un annonceur. AGREGE UNIQUEMENT : aucun identifiant
+// visiteur, aucune IP, aucun cookie en base. key = "pub:<nom de pastille maison>" ou "ad:<AdSlot.id>".
+model PromoStat {
+  key    String
+  day    DateTime @db.Date
+  views  Int      @default(0)
+  clicks Int      @default(0)
+
+  @@id([key, day])
+}
+
+// Demande de devis pub (Naim 24/09) : formulaire du 1er encart "your ad here" de l'aside gauche. Texte SIMPLE
+// uniquement (charset restreint cote route : A-Za-z0-9 espace @ . , : ! ?), 1 demande / IP / 24h (rate-limit en
+// memoire, comme le reste du site : AUCUNE IP en base). Naim lit via `npm run quotes:review`. Email vers
+// tabascocity@proton.me si BREVO_API_KEY est configure (sinon la demande est seulement stockee, rien n'est perdu).
+model QuoteRequest {
+  id        String   @id @default(cuid())
+  message   String
+  emailed   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}

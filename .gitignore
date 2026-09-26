@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Builds / output
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Env & secrets (JAMAIS committer) — sauf les .env.example
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Bases de données locales (dev/prod) — jamais de donnees reelles dans git
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs / OS / divers
+*.log
+.DS_Store
+Thumbs.db
+*.stackdump
+.cache/
+
+# Medias lourds (videos) — les images/webp du site restent suivies
+*.mp4
+*.webm
+*.mov
+*.mkv

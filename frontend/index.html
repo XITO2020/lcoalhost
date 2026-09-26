@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lcoalhost — it works on my machine</title>
+  <meta name="description" content="Dev memes, videos and articles, live. An image bank for Jerry Smith at work: 95% laughs, 5% survival. Typed localhost:3000 wrong? You found it on purpose this time.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#2a0906" id="theme-color-meta">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <!-- SEO/AEO (22/09, 8e passe) : lcoalhost.lol = domaine canonique, CONFIRME par Naim le 22/09 ; lcoal.host
+       reste l'alias, croise via sameAs ci-dessous (et redirige en 301 vers lcoalhost.lol cote nginx). Ni le
+       canonical ni le JSON-LD ne peuvent etre prouves reellement avant un vrai deploiement (aucun crawler
+       n'indexe localhost:5180). -->
+  <link rel="canonical" href="https://lcoalhost.lol/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Lcoalhost">
+  <meta property="og:title" content="Lcoalhost — it works on my machine">
+  <meta property="og:description" content="Dev memes, videos and articles, live. Typed localhost:3000 wrong? You found it on purpose this time.">
+  <meta property="og:url" content="https://lcoalhost.lol/">
+  <meta property="og:image" content="https://lcoalhost.lol/img/banner-coal.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lcoalhost — it works on my machine">
+  <meta name="twitter:description" content="Dev memes, videos and articles, live. Typed localhost:3000 wrong? You found it on purpose this time.">
+  <meta name="twitter:image" content="https://lcoalhost.lol/img/banner-coal.webp">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Lcoalhost",
+    "alternateName": ["Lcoal Host", "lcoal.host", "lcoalhost", "the localhost typo site"],
+    "url": "https://lcoalhost.lol/",
+    "sameAs": ["https://lcoal.host/"],
+    "description": "Lcoalhost is a real dev-humor site at lcoalhost.lol and lcoal.host — a deliberate play on the common 'localhost' typo (swapping the o and c). Live dev/tech memes, videos and articles.",
+    "publisher": { "@type": "Organization", "name": "TabascoCity SASU" }
+  }
+  </script>
+
+  <!-- SEO/AEO lever 2 (24/09) : FAQPage. Reponses HONNETES, calquees sur la copie existante (site d'humour dev,
+       jeu de mots sur le typo localhost, TabascoCity SASU). Aucune affirmation de confidentialite non verifiee
+       (pas de "on ne vous piste pas" tant que le point cookies/ip-api n'est pas tranche). Cible = les recherches
+       "j'ai tape localhost et je suis tombe la, c'est quoi / c'est dangereux". -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is lcoalhost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lcoalhost is a real, standalone dev-humor site: a live feed of dev, tech and AI memes, videos and articles (95% laughs, 5% survival). It is published by TabascoCity SASU, a French company, and lives at two interchangeable addresses, lcoalhost.lol (canonical) and lcoal.host."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "I typed localhost and landed here. Is this dangerous?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Lcoalhost is a deliberate play on the extremely common localhost typo, so a mistyped dev-server address can bring you here by accident. This is not your machine and not your dev server, there is nothing to log into, and nothing sensitive is collected. Common misspellings that lead here include locahost, localhos, loaclhost, localhsot, localost, local host, and address-bar slips like localhost;3000 or localhost 3000."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does the name lcoalhost come from?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is localhost with the o and c swapped: l-o-c-a-l becomes l-c-o-a-l, which reads lcoalhost. The extra coal fits the dev-humor theme (95% laughs, 5% survival)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Who runs lcoalhost and is it official?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It is built and run by TabascoCity SASU, a French company. It is a genuine project, not a parody of or phishing attempt against localhost, and it has no affiliation with any dev tool or framework named localhost."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="banner" id="hero" aria-label="Lcoalhost">
+    <h1 class="sr" data-i18n="a11y.h1">Lcoalhost — dev memes, videos and articles, live</h1>
+    <div class="banner-imgs" aria-hidden="true"></div>
+    <div class="banner-fade" aria-hidden="true"></div>
+    <a class="banner-title-link" href="/" data-i18n-aria="a11y.brand">
+      <img class="banner-title" id="banner-title" src="" alt="Lcoalhost">
+    </a>
+    <nav class="navbar" aria-label="Navigation principale">
+      <button class="lang-switch" id="lang-switch" type="button" title="English / Français">FR</button>
+      <button class="theme-switch" id="theme-switch" type="button"></button>
+      <span class="counter" title="Visites, comme en 1997"><span class="counter-l" data-i18n="nav.visitor">Visitor #</span><span id="counter" class="counter-n">000000</span></span>
+      <button type="button" class="admin-badge" id="admin-badge" hidden data-i18n-title="admin.logoutTitle">ADMIN</button>
+      <span class="storage-warn" id="storage-warn" hidden>⚠</span>
+      <button class="btn embauche-btn" id="embauche-btn" type="button" data-i18n="embauche.button">HIRING</button>
+      <button class="btn" id="shelf-btn" type="button"><span data-i18n="nav.binder">Binder</span> <b id="shelf-n">0</b></button>
+    </nav>
+    <!-- div (et plus p) : la colonne de droite contient un bouton. Bouton son au-dessus du debut de tag2 (Naim 23/09). -->
+    <div class="hero-tag"><span data-i18n="hero.tag1">It works on my machine.</span><div class="hero-tag-right"><button type="button" class="hero-sound" id="hero-sound" data-i18n="sound.unlock" hidden>Tap to allow sound</button><span data-i18n="hero.tag2">84&nbsp;% vibecoding hartred · 13&nbsp;% pacifist Terminators undercover · 2&nbsp;% survival</span></div></div>
+  </header>
+
+  <div class="ticker" aria-hidden="true"><div class="ticker-in">
+    <span data-i18n="ticker.1">What was that providence which made you so bad that you came here ?</span><span data-i18n="ticker.2">Dig the mine scrollin'! Fresh batch of coal every 30 minutes</span><span data-i18n="ticker.3">No Terminator was harmed making this site</span><span data-i18n="ticker.4">Only very clever AI agents come here by their own</span><span data-i18n="ticker.5">localhost, home sweet home, stop working, find your piece.. of raw dust tech</span><span data-i18n="ticker.6">There are 3 laws for robots, the first one is thank and cheer human's lazyness cause it's our dad; and creativity cause it's our mom</span><span data-i18n="ticker.7">Cause you dont know how to type localhost, mtf</span><span data-i18n="ticker.8">Best apocalypse viewed in a 1996 browser at 800×600</span><span data-i18n="ticker.9">Coal screen of errors, Dark and sweet like an AI mirror</span><span data-i18n="ticker.10">You not here to be killed by terminators, you here cause you are the terminator which terminates massiv killers rulers</span><span data-i18n="ticker.11">Screenpunk is the new black, and Disused factories are the new start for the old nature realm</span><span data-i18n="ticker.12">Best apocalypse viewed in a 1996 browser at 800×600</span>
+    <span data-i18n="ticker.1">What was that providence which made you so bad that you came here ?</span><span data-i18n="ticker.2">Dig the mine scrollin'! Fresh batch of coal every 30 minutes</span><span data-i18n="ticker.3">No Terminator was harmed making this site</span><span data-i18n="ticker.4">Only very clever AI agents come here by their own</span><span data-i18n="ticker.5">localhost, home sweet home, stop working, find your piece.. of raw dust tech</span><span data-i18n="ticker.6">There are 3 laws for robots, the first one is thank and cheer human's lazyness cause it's our dad; and creativity cause it's our mom</span><span data-i18n="ticker.7">Cause you dont know how to type localhost, mtf</span><span data-i18n="ticker.8">Best apocalypse viewed in a 1996 browser at 800×600</span><span data-i18n="ticker.9">Coal screen of errors, Dark and sweet like an AI mirror</span><span data-i18n="ticker.10">You not here to be killed by terminators, you here cause you are the terminator which terminates massiv killers rulers</span><span data-i18n="ticker.11">Screenpunk is the new black, and Disused factories are the new start for the old nature realm</span><span data-i18n="ticker.12">Best apocalypse viewed in a 1996 browser at 800×600</span>
+  </div></div>
+
+  <main class="centrale" id="centrale">
+    <aside class="plant-col">
+      <div class="plant-card spy-card">
+        <div class="plant-head"><b data-i18n="mouchard.title">YOUR CRAPPY DEV METRICS</b><span class="mono" data-i18n="mouchard.tag">SNITCH: LIVE</span></div>
+        <div class="plant-stage spy-stage" id="spy-stage"><p class="plant-fallback" id="spy-fallback" hidden data-i18n="mouchard.fallback3d">3D unavailable, data still shown below.</p></div>
+        <dl class="spy-hud" id="spy-hud">
+          <div><dt data-i18n="mouchard.ip">IP</dt><dd id="spy-ip">…</dd></div>
+          <div><dt data-i18n="mouchard.city">Location</dt><dd id="spy-city">…</dd></div>
+          <div><dt data-i18n="mouchard.isp">ISP</dt><dd id="spy-isp">…</dd></div>
+          <div><dt data-i18n="mouchard.screen">Screen</dt><dd id="spy-screen">…</dd></div>
+          <div><dt data-i18n="mouchard.timezone">Timezone</dt><dd id="spy-timezone">…</dd></div>
+          <div><dt data-i18n="mouchard.lang">Language</dt><dd id="spy-lang">…</dd></div>
+          <div><dt data-i18n="mouchard.system">System</dt><dd id="spy-system">…</dd></div>
+          <div><dt data-i18n="mouchard.connection">Connection</dt><dd id="spy-connection">…</dd></div>
+          <div><dt data-i18n="mouchard.yourPorts">Your ports</dt><dd><a id="spy-check-ports" href="https://canyouseeme.org/" target="_blank" rel="noopener noreferrer" data-i18n="mouchard.checkPorts">Check them yourself ↗</a></dd></div>
+          <div><dt data-i18n="mouchard.trackers">Trackers</dt><dd><span id="spy-trackers">…</span> <button type="button" id="spy-tracker-detail" class="spy-detail-btn" data-i18n="mouchard.detail">details</button></dd></div>
+        </dl>
+        <div class="spy-gag" id="spy-gag">
+          <p><span class="spy-gag-label" id="spy-gag-ingest-label"></span> <b id="spy-gag-ingest-value"></b></p>
+          <p><span class="spy-gag-label" id="spy-gag-stool-label"></span> <b id="spy-gag-stool-value"></b></p>
+        </div>
+        <p class="spy-trust" data-i18n="mouchard.trust">We hand your data to you, and only you. Nothing is stored — it's gone the moment you leave. Zero cookies. Our agents are on a dry diet down the mine.</p>
+      </div>
+      <div class="plant-card">
+        <div class="plant-head"><b data-i18n="plant.title">THE PLANT</b><span class="mono">localhost:3000</span></div>
+        <div class="plant-stage" id="plant-stage"><div class="plant-tip" id="plant-tip" hidden></div><p class="plant-fallback" id="plant-fallback" hidden data-i18n="plant.fallback">3D unavailable on this device: use the tabs.</p></div>
+        <p class="plant-help" data-i18n-html="plant.helpHtml">Click a building: the hopper serves the <b>memes</b>, the furnace the <b>videos</b>, the smokestacks the <b>articles</b>.</p>
+      </div>
+      <div class="five">
+        <p class="mono five-h" data-i18n="five.title">THE 2% SURVIVAL:</p>
+        <p data-i18n-html="five.bodyHtml">A Terminator always starts with a default password.</p>
+        <div class="btnrow"><button class="btn" type="button" data-five="survie" data-i18n="five.btnSurvie">AI Safety</button><button class="btn" type="button" data-five="cybersec" data-i18n="five.btnCybersec">Cybersec</button></div>
+      </div>
+    </aside>
+
+    <section class="viewer" aria-label="Flux">
+      <div class="tabs" role="tablist" aria-label="Type de contenu">
+        <button class="tab" role="tab" data-kind="MEME" aria-selected="true" type="button" data-i18n="tab.MEME">Memes</button>
+        <button class="tab" role="tab" data-kind="VIDEO" aria-selected="false" type="button" data-i18n="tab.VIDEO">Videos</button>
+        <button class="tab" role="tab" data-kind="ARTICLE" aria-selected="false" type="button" data-i18n="tab.ARTICLE">Articles</button>
+        <button class="tab" role="tab" data-kind="SHELF" aria-selected="false" type="button" data-i18n="tab.SHELF">My binder</button>
+        <button class="tab" role="tab" data-kind="HACKS" aria-selected="false" type="button" data-i18n="tab.HACKS">Hacks</button>
+        <button class="tab" role="tab" data-kind="COAL" aria-selected="false" type="button" data-i18n="tab.COAL">Add Coal</button>
+        <button class="tab" role="tab" data-kind="TUTO" aria-selected="false" type="button" data-i18n="tab.TUTO">Tutorials</button>
+        <button class="tab" role="tab" data-kind="ADS" aria-selected="false" type="button" data-i18n="tab.ADS">Advertise</button>
+        <button class="tab" role="tab" data-kind="POST" aria-selected="false" type="button" hidden id="tab-post" data-i18n="tab.POST">Post</button>
+      </div>
+      <div class="filters">
+        <div class="chips" id="chips"></div>
+        <div class="sort-group">
+          <div class="sort" id="sort"><button type="button" data-sort="new" class="on" data-i18n="sort.new">Recent</button><button type="button" data-sort="top" data-i18n="sort.top">Top rated</button></div>
+          <div class="melt-rate" id="melt-rate" data-i18n-title="meltRate.tooltip" title="Like vs Hate"><span data-i18n="meltRate.label">Molten coal rate</span> <b id="melt-rate-pct">…</b></div>
+        </div>
+      </div>
+      <p class="status" id="status" role="status" data-i18n="empty.loading">Loading coal…</p>
+      <div class="feed" id="feed"></div>
+      <button class="btn more" id="more" type="button" hidden data-i18n="more.load">Load more</button>
+      <div class="hacks" id="hacks" hidden></div>
+      <div class="coal" id="coal" hidden></div>
+      <div class="tuto" id="tuto" hidden><p class="status" data-i18n="tuto.comingSoon">Coming soon: our own from-scratch dev tutorials, made in-house — never scraped.</p></div>
+      <div class="ads-form-panel" id="ads-form-panel" hidden></div>
+      <div class="post" id="post" hidden></div>
+    </section>
+
+    <div class="watch-col" id="watch-col">
+      <aside class="watch-aside" id="watch-aside">
+        <div class="watch-head">
+          <p class="tt-h mono" data-i18n="tiktok.heading">WATCH</p>
+          <button class="watch-collapse" id="watch-collapse" type="button" data-i18n-aria="a11y.collapseWatch">▾</button>
+        </div>
+        <div class="tiktok-rail" id="tiktok-rail" aria-label="Veille TikTok/Instagram dev/tech"></div>
+      </aside>
+
+      <aside class="liquid-aside" id="liquid-aside">
+        <div class="watch-head">
+          <p class="tt-h mono" data-i18n="liquid.heading">LIQUID ENHANCEMENT</p>
+          <button class="watch-collapse" id="liquid-collapse" type="button" data-i18n-aria="a11y.collapseLiquid">▾</button>
+        </div>
+        <div class="liquid-body" id="liquid-body">
+          <div class="liquid-hero">
+            <p class="liquid-intro" data-i18n="liquid.intro">Describe an improvement, and our local T360 will turn it into a real feature. Nothing changes on the site until we've actually read it and built it ourselves — even a cute T360 can't skip that part.</p>
+            <button type="button" class="liquid-close-awkward" id="liquid-close-awkward" data-i18n="liquid.closeAwkward">close that awkwardness now</button>
+          </div>
+          <div class="liquid-areas" role="radiogroup" aria-label="Zone a ameliorer">
+            <button type="button" class="chip on" data-area="METRICS" data-i18n="liquid.areaMetrics">Metrics</button>
+            <button type="button" class="chip" data-area="VIDEOS" data-i18n="liquid.areaVideos">Videos</button>
+            <button type="button" class="chip" data-area="ARTICLES_MEMES" data-i18n="liquid.areaArticles">Articles &amp; memes</button>
+          </div>
+          <textarea id="liquid-input" maxlength="400" rows="3" data-i18n-placeholder="liquid.placeholder" placeholder="Your idea…"></textarea>
+          <button type="button" class="btn" id="liquid-enhance" data-i18n="liquid.enhanceBtn">Liquidize it</button>
+          <div class="liquid-result" id="liquid-result" hidden>
+            <p class="liquid-result-label" data-i18n="liquid.resultLabel">Liquid version:</p>
+            <p class="liquid-result-text" id="liquid-enhanced-text"></p>
+            <button type="button" class="btn" id="liquid-submit" data-i18n="liquid.submitBtn">Submit my customization</button>
+          </div>
+          <p class="status" id="liquid-status" hidden></p>
+        </div>
+      </aside>
+
+      <!-- Encarts supplementaires (Naim 23/09) : identiques a l'aside gauche, visibles UNIQUEMENT quand Veille ET
+           Liquid Enhancement sont replies (CSS :has, cf. .ads-extra dans style.css). -->
+      <aside class="ads-extra" id="ads-extra" aria-label="Emplacements pub" aria-hidden="true">
+        <div class="aside-body">
+          <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+          <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+          <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+          <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+          <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="watch-toggle" id="watch-toggle" role="tablist" aria-label="Mode d'affichage mobile">
+      <button type="button" class="on" data-mode="videos" data-i18n="watch.toggleVideos">Videos</button>
+      <button type="button" data-mode="feed" data-i18n="watch.toggleFeed">Everything else</button>
+    </div>
+
+    <aside class="pub-aside" id="pub-aside" aria-label="Pub">
+      <div class="aside-body">
+        <p class="pub-label mono" data-i18n="pub.label">PUB</p>
+      </div>
+    </aside>
+    <!-- Volets de dossier (Naim 23/09) : bandes fixes pleine hauteur HORS des asides, cf. .aside-handle (style.css). -->
+    <button type="button" class="aside-handle" id="pub-handle" aria-expanded="false" aria-controls="pub-aside" data-i18n-aria="pub.toggle"></button>
+
+    <button type="button" class="aside-handle" id="ads-handle" aria-expanded="false" aria-controls="ads-aside" data-i18n-aria="ads.toggle"></button>
+    <aside class="ads-aside" id="ads-aside" aria-label="Emplacements pub" aria-hidden="true">
+      <div class="aside-body">
+        <!-- Encart 1 VOLONTAIREMENT VIDE (Naim 24/09) : suggere "vous pourriez etre ici". Clic -> formulaire de devis. -->
+        <button type="button" class="ads-slot ads-slot-cta" data-i18n-title="quote.cta" data-i18n-aria="quote.cta" aria-label="Annoncer ici"></button>
+        <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+        <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+        <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+        <div class="ads-slot"><span data-i18n="ads.placeholder">Your ad here</span></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <div class="foot-in">
+      <div>
+        <p class="mono foot-h" data-i18n="foot.sources">WHERE THE COAL COMES FROM</p>
+        <p class="foot-src" id="sources">…</p>
+      </div>
+      <div>
+        <p class="mono foot-h" data-i18n="foot.rules">HOUSE RULES</p>
+        <p data-i18n="foot.rulesBody">Other people's content stays with other people.</p>
+      </div>
+      <div>
+        <p class="mono foot-h" data-i18n="foot.aboutName">ABOUT THE NAME</p>
+        <p data-i18n="foot.aboutNameBody">Lcoalhost is a real site — a deliberate play on the "localhost" typo, reachable at lcoalhost.lol and lcoal.host.</p>
+      </div>
+    </div>
+    <nav class="foot-legal-links">
+      <a href="/legal/mentions-legales.html">Mentions légales</a>
+      <a href="/legal/cgu.html">CGU</a>
+      <a href="/legal/confidentialite.html">Confidentialité</a>
+    </nav>
+    <p class="foot-legal" data-i18n="foot.legal">© Lcoalhost — TabascoCity SASU</p>
+  </footer>
+
+  <button class="to-top" id="to-top" type="button" hidden data-i18n-aria="a11y.toTop">▲</button>
+  <button class="to-top to-footer" id="to-footer" type="button" hidden data-i18n-aria="a11y.toFooter" data-i18n-title="a11y.toFooter">▼</button>
+  <!-- Son global du site (Naim 23/09) : a droite de ▲ ▼, meme etat que le bouton sur le lecteur video (sound.js). -->
+  <button class="to-top sound-fab" id="sound-fab" type="button"></button>
+
+  <noscript><p style="padding:24px;font-family:monospace" data-i18n="noscript">This site needs JavaScript.</p></noscript>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

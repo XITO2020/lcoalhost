@@ -1,0 +1,126 @@
+# =====================================================================================
+# Lcoalhost — stack PRODUCTION sur le KVM2 Hostinger (187.77.144.220), decision Naim 23/09.
+# Meme schema que tuveuxun.expert deja en ligne sur ce serveur (sites/tuveuxun-expert/deploy-traefik/) :
+# un conteneur par service, route par le Traefik DEJA PRESENT (labels, certificat Let's Encrypt automatique).
+# JAMAIS de nginx/certbot systeme sur le KVM2 (casserait Traefik, Dueria, le mail...).
+# Dossier serveur : /docker/lcoalhost/   Lancer : docker compose --env-file .env up -d --build
+# Ou tout simplement : double-clic sur sites/lcoalhost/deploy-kvm2.bat depuis le PC.
+# KVM2 = serveur PARTAGE qui doit rester LEGER (place reservee a un LLM plus puissant pour tuveuxun puis
+# Lcoalhost) : Postgres alpine + API Node + nginx alpine, rien d'autre (pas d'Umami, agent memes OFF).
+# NON VALIDE en vrai (aucun acces SSH depuis la machine de dev) : premier `up` a surveiller, cf. deploy/DEPLOY.md.
+# =====================================================================================
+
+# Plafonds (audit 24/09) : KVM2 PARTAGE qui doit rester leger -> logs Docker bornes (sinon ils grossissent sans fin :
+# acces nginx, scraper toutes les 30 min) et memoire plafonnee par conteneur.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: lh_postgres
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 384m
+    environment:
+      POSTGRES_DB: lcoalhost
+      POSTGRES_USER: lh_user
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD manquant dans .env}
+    volumes:
+      - lh_pgdata:/var/lib/postgresql/data
+    networks: [lh_net]   # jamais expose : ni port hote, ni Internet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lh_user -d lcoalhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: lh_backend
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 512m
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=320   # tas Node sous le plafond memoire du conteneur
+      PORT: "4200"
+      DATABASE_URL: postgresql://lh_user:${POSTGRES_PASSWORD:?}@db:5432/lcoalhost
+      CORS_ORIGINS: ${SITE_ORIGIN:?SITE_ORIGIN manquant dans .env (ex. https://lcoalhost.lol)}
+      # Mode admin : chaine longue et aleatoire (le backend REFUSE de demarrer avec un token de dev faible).
+      ADMIN_TOKEN: ${ADMIN_TOKEN:?ADMIN_TOKEN manquant dans .env}
+      SCRAPE_ENABLED: "true"
+      SCRAPE_INTERVAL_MIN: "30"
+      MIRROR_DIR: /data/mirror
+      MIRROR_MIN_ENGAGEMENT: "3"
+      # "Big cleaning" : plafond disque des copies. KVM2 partage + doit rester leger -> 5 Go par defaut (10 Go en dev).
+      STORAGE_BUDGET_MB: ${STORAGE_BUDGET_MB:-5120}
+      # Uploads "Add Coal" en attente de relecture : sur un volume, sinon perdus a chaque reconstruction du conteneur.
+      COAL_UPLOAD_DIR: /data/coal
+      # Reddit : vide = connecteur OFF (acces API non approuve).
+      REDDIT_CLIENT_ID: ${REDDIT_CLIENT_ID:-}
+      REDDIT_CLIENT_SECRET: ${REDDIT_CLIENT_SECRET:-}
+      REDDIT_USER_AGENT: ${REDDIT_USER_AGENT:-web:lcoalhost:0.1}
+      # Paiements (Hacks + encarts "Annoncer") : compte Stripe SASU TabascoCity, PAS ENCORE LIVE. Vide = rail OFF.
+      PAYMENTS_SITE_ID: lcoalhost
+      PAYMENTS_PUBLIC_URL: ${SITE_ORIGIN:?}
+      PAYMENTS_ENABLED_RAILS: stripe
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET_PAYMENTS: ${STRIPE_WEBHOOK_SECRET_PAYMENTS:-}
+      # Agent memes : OFF. Plus tard, il utilisera l'Ollama DEJA sur le KVM2 (celui de tuveuxun, a muscler — decision
+      # Naim 23/09), joint via host-gateway ci-dessous. Ecrit toujours en HIDDEN (relecture obligatoire).
+      AGENT_MEMES_ENABLED: ${AGENT_MEMES_ENABLED:-false}
+      OLLAMA_URL: ${OLLAMA_URL:-http://host.docker.internal:11434}
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:3b}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # Docker Linux ne resout pas host.docker.internal tout seul
+    volumes:
+      - ./data/mirror:/data/mirror   # copies disque (contenu sous licence libre + maison), aussi servies par `web`
+      - ./data/coal:/data/coal
+    ports:
+      - "127.0.0.1:4300:4200"   # joint UNIQUEMENT par `web` (nginx, reseau hote), jamais depuis Internet
+    networks: [lh_net]
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:4200/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  # Porte d'entree : nginx sert le front statique (dist/ de Vite), les copies disque, le dossier video de secours,
+  # et relaie /api, /item, /sitemap.xml, /llms-full.txt vers le backend. Traefik -> ce conteneur (port 8086).
+  web:
+    image: nginx:alpine
+    container_name: lh_web
+    network_mode: host   # meme schema que tuveuxun-web (8085) : Traefik joint le service sur le port hote
+    restart: unless-stopped
+    logging: *logging
+    mem_limit: 64m
+    depends_on:
+      backend:
+        condition: service_healthy
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./data/mirror:/srv/mirror:ro
+      # Petit dossier video de secours (Naim 23/09) : sert les videos quand le pont Conspix n'existe pas.
+      - ./videos:/srv/videos:ro
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.lcoalhost.rule=Host(`lcoalhost.lol`) || Host(`www.lcoalhost.lol`) || Host(`lcoal.host`) || Host(`www.lcoal.host`)
+      - traefik.http.routers.lcoalhost.entrypoints=websecure
+      - traefik.http.routers.lcoalhost.tls.certresolver=letsencrypt
+      - traefik.http.services.lcoalhost.loadbalancer.server.port=8086
+
+volumes:
+  lh_pgdata:
+
+networks:
+  lh_net:
