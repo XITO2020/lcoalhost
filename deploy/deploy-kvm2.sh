@@ -53,7 +53,10 @@ if [ ! -f .env ]; then
   echo "Remplis POSTGRES_PASSWORD et ADMIN_TOKEN - nano /docker/lcoalhost/.env - puis relance deploy-kvm2.bat."
   exit 2
 fi
-if grep -q CHANGE_ME .env; then
+if grep -q '=CHANGE_ME' .env; then
+  # (bug corrige 27/09 : "grep -q CHANGE_ME" tout court matchait aussi le commentaire d'en-tete du .env, qui
+  # contient litteralement le mot CHANGE_ME -> le test bloquait pour toujours, meme .env rempli. "=CHANGE_ME"
+  # ne matche que la VALEUR non remplacee d'une variable.)
   echo "Le .env du serveur contient encore CHANGE_ME : remplis-le - nano /docker/lcoalhost/.env - puis relance."
   exit 2
 fi
