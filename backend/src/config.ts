@@ -88,7 +88,7 @@ const schema = z.object({
   ADS_PRICE_CENTS: z.coerce.number().min(1).default(999),
   ADS_DEFAULT_DURATION_DAYS: z.coerce.number().min(1).default(30),
 
-  // Demande de devis pub (24/09) : email vers tabascocity@proton.me via SMTP Brevo (FR-EU, aligne anti-Big-Tech),
+  // Demande de devis pub (24/09) : email vers coalthehost@proton.me via SMTP Brevo (FR-EU, aligne anti-Big-Tech),
   // exactement comme TabascoCity (nodemailer + memes noms de variables EMAIL_SERVER_*). Si EMAIL_SERVER_HOST n'est
   // pas configure, la demande est seulement stockee en base (lue par `npm run quotes:review`).
   EMAIL_SERVER_HOST: z.string().default(''),
@@ -120,5 +120,5 @@ export const config = {
   redditSubs: env.REDDIT_SUBREDDITS.split(',').map((s) => s.trim()).filter(Boolean),
   redditSearchQueries: env.REDDIT_SEARCH_QUERIES.split(',').map((s) => s.trim()).filter(Boolean),
   // Identifie honnetement le robot aupres des sources (bonne pratique + exige par plusieurs API).
-  userAgent: 'lcoalhost-bot/0.1 (+https://lcoal.host; contact: tabascocity@proton.me)',
+  userAgent: 'lcoalhost-bot/0.1 (+https://lcoal.host; contact: coalthehost@proton.me)',
 };
